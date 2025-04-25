@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+use App\Models\Product;
+use App\Models\ProductVariation;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
+
+class ProductController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index() {
+        $products = Product::with('variations')->get();
+        return $products;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create() {
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreProductRequest $request)
+    {
+        $request = $request->validated();
+        $product = null;
+
+        // Create a big transaction to crete the product
+        DB::transaction( function() use ($request) {
+            $product = Product::create([
+                'name' => $request['name'],
+                'image' => $request['image'],
+                'description' => $request['description'],
+                'shop_id' => $request['shop_id'],
+            ]);
+            foreach($request['variations'] as $variation) {
+                $product->variations()->create([
+                    "name" => $variation['name'],
+                    "sku" => $variation['sku'],
+                    "price" => $variation['price'],
+                    "qty_in_stock" => $variation['qty_in_stock']
+                ]);
+            }
+        });
+
+        return $product;
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Product $product)
+    {
+        $product->loadMissing('variations');
+        return $product;
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Product $product)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateProductRequest $request, Product $product)
+    {
+        $request = $request->validated();
+        $product->update($request);
+        return $product;
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Product $product)
+    {
+        $product->delete();
+    }
+}
