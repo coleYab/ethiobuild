@@ -56,7 +56,9 @@ class ShopController extends Controller
      */
     public function update(UpdateShopRequest $request, Shop $shop)
     {
-        //
+        $request = $request->validated();
+        $shop = $shop->update($request);
+        return $shop;
     }
 
     /**

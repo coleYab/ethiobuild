@@ -11,7 +11,7 @@ class UpdateShopRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class UpdateShopRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => ['required' , 'string'],
+            "address" => ['required' , 'string'],
+            "user_id" => ['required' , 'integer'],
+            "image" => ['required' , 'string'],
+            "cover_image" => ['required' , 'string'],
+            "email" => ['required' , 'string'],
+            "phone" => ['required' , 'string'],
+            "logo" => ['required' , 'string'],
+            "description" => ['required' , 'string'],
         ];
     }
 }
