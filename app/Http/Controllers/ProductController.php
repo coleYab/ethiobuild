@@ -76,8 +76,25 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $request = $request->validated();
-        $product->update($request);
+        // Create a big transaction to crete the product
+        DB::transaction( function() use ($request, $product) {
+            $product->update([
+                'name' => $request['name'],
+                'image' => $request['image'],
+                'description' => $request['description'],
+                'shop_id' => $request['shop_id'],
+            ]);
+            $product->variations()->delete();
+            foreach($request['variations'] as $variation) {
+                $product->variations()->create([
+                    "name" => $variation['name'],
+                    "sku" => $variation['sku'],
+                    "price" => $variation['price'],
+                    "qty_in_stock" => $variation['qty_in_stock']
+                ]);
+            }
+        });
+
         return $product;
     }
 
