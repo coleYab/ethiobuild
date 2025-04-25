@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCartRequest;
+use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateCartRequest;
 use App\Models\Cart;
 use App\Models\User;
@@ -46,13 +47,6 @@ class CartController extends Controller
                 ]);
             }
         });
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function add_item(StoreCartRequest $request) {
-        // TODO: please work on this thing
     }
 
     /**
