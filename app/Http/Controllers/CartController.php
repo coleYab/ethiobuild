@@ -76,7 +76,16 @@ class CartController extends Controller
      */
     public function update(UpdateCartRequest $request, Cart $cart)
     {
-        //
+        $request = $request->validated();
+        DB::transaction(function () use($request, $cart) {
+            $cart->items()->delete();
+            foreach ($request['items'] as $cart_item) {
+                $cart->items()->create([
+                    'qty' => $cart_item['qty'],
+                    'product_id' => $cart_item['product_id'],
+                ]);
+            }
+        });
     }
 
     /**
