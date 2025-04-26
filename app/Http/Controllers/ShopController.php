@@ -6,6 +6,8 @@ use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use App\Models\Shop;
 use App\Models\User;
+use App\Models\Order;
+use Inertia\Inertia;
 
 class ShopController extends Controller
 {
@@ -22,7 +24,7 @@ class ShopController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('shop/create');
     }
 
     /**
@@ -40,7 +42,36 @@ class ShopController extends Controller
     public function show(Shop $shop)
     {
         $shop = $shop->loadMissing('products');
-        return $shop;
+        return Inertia::render('shop/profile', [
+            'shop' => $shop
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function products($id)
+    {
+        // Log::info($id);
+        $shop = Shop::findOrFail($id);
+        $shop = $shop->loadMissing('products');
+        return Inertia::render('shop/products', [
+            'products' => $shop->products
+        ]);
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function orders($id)
+    {
+        // Log::info($id);
+        $shop = Shop::findOrFail($id);
+        $shop = $shop->loadMissing('products');
+        return Inertia::render('shop/orders', [
+            'orders' => Order::all()
+        ]);
     }
 
     /**

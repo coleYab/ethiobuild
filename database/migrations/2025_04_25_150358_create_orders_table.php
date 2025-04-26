@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->timestamp('order_date');
+            $table->timestamp('order_date')->nullable()->useCurrent();
             $table->string('order_status');
-            $table->string('order_cost');
+            $table->double('order_cost');
             $table->timestamps();
         });
     }

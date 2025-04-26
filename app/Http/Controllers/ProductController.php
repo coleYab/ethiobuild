@@ -23,6 +23,7 @@ class ProductController extends Controller
      * Show the form for creating a new resource.
      */
     public function create() {
+        return Inertia::render('product/create');
     }
 
     /**
@@ -51,7 +52,9 @@ class ProductController extends Controller
             }
         });
 
-        return $product;
+        return Inertia::render('product.show', [
+            'products' => $product
+        ]);
     }
 
     /**
@@ -60,7 +63,9 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->loadMissing('variations');
-        return $product;
+        return Inertia::render('product/show', [
+            'products' => $product
+        ]);
     }
 
     /**
