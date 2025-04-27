@@ -1,3 +1,4 @@
+import ProductsList from '@/components/product/productList';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -10,12 +11,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ products } : { products : any }) {
+export default function Dashboard({ products } : { products : any[] }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <span> {JSON.stringify(products)} </span>
+                <ProductsList products={products} />
             </div>
         </AppLayout>
     );
