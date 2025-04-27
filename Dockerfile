@@ -38,9 +38,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 ENV APP_PORT=8000
 EXPOSE $APP_PORT
 
-# Copy a custom Apache virtual host configuration (optional, if you need more advanced Apache settings)
-COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
-
 # Start Apache in the foreground (Apache will handle serving the app)
 CMD ["apache2-foreground"]
 
