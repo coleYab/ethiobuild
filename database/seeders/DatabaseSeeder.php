@@ -19,7 +19,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory(1)->create()->each(function ($user) {
+        User::factory(1)->create([ 
+            'password' => 'gamegame',   
+            'email' => 'test@gmail.com'
+        ])->each(function ($user) {
             Shop::factory(10)->create([
                 'user_id' => $user->id
             ])->each(function ($shop) {

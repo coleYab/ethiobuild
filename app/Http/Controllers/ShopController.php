@@ -16,7 +16,10 @@ class ShopController extends Controller
      */
     public function index()
     {
-        return Shop::with('products')->get();
+        $shops = Shop::all();
+        return Inertia::render('shop/index', [
+            'shops' => $shops
+        ]);
     }
 
     /**
@@ -44,6 +47,20 @@ class ShopController extends Controller
         $shop = $shop->loadMissing('products');
         return Inertia::render('shop/profile', [
             'shop' => $shop
+        ]);
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function me()
+    {
+        $user = auth()->user();
+        $user->loadMissing('shops');
+        $shops = $user->shops;
+        return Inertia::render('shop/index', [
+            'shops' => $shops
         ]);
     }
 

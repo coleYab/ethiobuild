@@ -17,8 +17,8 @@ Route::get('order/{id}/checkout', [OrderController::class, 'checkout' ]);
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('product', ProductController::class);
     
+    Route::get('shop/me', [ ShopController::class, 'me']);
     Route::resource('shop', ShopController::class);
-
     Route::get('shop/{id}/products', [ShopController::class, 'products']);
     Route::get('shop/{id}/orders', [ShopController::class, 'orders']);
 

@@ -25,7 +25,7 @@ class ShopFactory extends Factory
             'phone' => $this->faker->text(20),
             'email' => $this->faker->text(20),
             'logo' => $this->faker->text(20),
-            'description' => $this->faker->text(2000),
+            'description' => $this->faker->text(60),
         ];
     }
 }
