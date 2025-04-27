@@ -18,9 +18,9 @@ const defaultValues = {
   email: "",
   phone: "",
   description: "",
-  image: "image",
-  cover_image: "iamge",
-  logo: "mage",
+  image: null,
+  cover_image: null,
+  logo: null,
   user_id: 0,
 }
 
@@ -50,7 +50,7 @@ export default function CreateShopForm() {
         }
       }
       reader.readAsDataURL(file)
-      // setData(imageType, file)
+      setData(imageType, file)
     }
   }
 

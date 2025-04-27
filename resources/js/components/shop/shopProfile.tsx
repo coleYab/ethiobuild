@@ -34,7 +34,6 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
     });
   };
 
-  console.log(auth.user)
   console.log(shop)
 
   return (
@@ -49,7 +48,7 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
               disabled={processing}
             >
                   <PlusIcon className="mr-2 h-4 w-4" /> Add Products
-      
+
             </Button>
                </Link>
 
@@ -71,7 +70,7 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
               </>
               }
           </div>
-          
+
       <Tabs defaultValue="profile">
         <TabsList className="self-center w-2xl gap-4">
           <TabsTrigger value="profile">Profile</TabsTrigger>
@@ -159,7 +158,7 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
                   <Label>Shop Logo</Label>
                   <div className="relative h-32 w-32 mx-auto">
                     <img
-                      src="/placeholder.svg?height=128&width=128"
+                      src={shop.logo}
                       alt="Shop Logo"
                       className="rounded-full object-cover border h-full w-full"
                     />
@@ -169,12 +168,12 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
                       </Button>
                     )}
                   </div>
-                </div> 
+                </div>
                 <div className="space-y-2">
                   <Label>Cover Image</Label>
                   <div className="relative h-48 w-full">
                     <img
-                      src="/placeholder.svg?height=192&width=640"
+                      src={shop.cover_image}
                       alt="Cover Image"
                       className="rounded-md object-cover border h-full w-full"
                     />

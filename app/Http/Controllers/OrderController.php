@@ -100,38 +100,34 @@ class OrderController extends Controller
         $user = User::findOrFail(1);
 
 
-        $order_id = $order->id;
-        $user_id = $user->id;
-        // $ref_no = "order-$order_id-$user_id";
-
-        // $curl = curl_init();
-        // curl_setopt_array($curl, array(
-        //     CURLOPT_URL => 'https://api.chapa.co/v1/transaction/initialize',
-        //     CURLOPT_RETURNTRANSFER => true,
-        //     CURLOPT_ENCODING => '',
-        //     CURLOPT_MAXREDIRS => 10,
-        //     CURLOPT_TIMEOUT => 0,
-        //     CURLOPT_FOLLOWLOCATION => true,
-        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //     CURLOPT_CUSTOMREQUEST => 'POST',
-        //     CURLOPT_POSTFIELDS =>`{
-        //     "amount":"10",
-        //     "currency": "ETB",
-        //     "email": $user->email,
-        //     "tx_ref": $ref_no,
-        //     "callback_url": "https://webhook.site/17dcb8c5-0c6d-47dc-be13-741984fd3495",
-        //     "return_url": "http://localhost:8000/",
-        //     "customization[title]": "Payment for my favourite merchant",
-        //     "customization[description]": "I love online payments.",
-        //     "meta[hide_receipt]": "true"
-        //     }`,
-        //     CURLOPT_HTTPHEADER => array(
-        //         'Authorization: Bearer CHASECK_TEST-***********************',
-        //         'Content-Type: application/json'
-        //     ),
-        // ));
-        // $response = curl_exec($curl);
-        // curl_close($curl);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.chapa.co/v1/transaction/initialize',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>`{
+            "amount":"10",
+            "currency": "ETB",
+            "email": $user->email,
+            "tx_ref": $ref_no,
+            "callback_url": "https://webhook.site/17dcb8c5-0c6d-47dc-be13-741984fd3495",
+            "return_url": "http://localhost:8000/",
+            "customization[title]": "Payment for my favourite merchant",
+            "customization[description]": "I love online payments.",
+            "meta[hide_receipt]": "true"
+            }`,
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer CHASECK_TEST-***********************',
+                'Content-Type: application/json'
+            ),
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
 
         $order->order_status = 'Completed';
         $order->save();

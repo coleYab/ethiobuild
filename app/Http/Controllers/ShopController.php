@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use App\Models\Shop;
-use App\Models\User;
 use App\Models\Order;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ShopController extends Controller
@@ -35,9 +35,24 @@ class ShopController extends Controller
      */
     public function store(StoreShopRequest $request)
     {
-        $request = $request->validated();
-        $shop = Shop::create($request);
-        $shop = $shop->loadMissing('products');
+        $validatedData = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $validatedData['image'] = Storage::url($request->file('image')->store('shops/images', 'public'));
+        }
+
+        if ($request->hasFile('cover_image')) {
+            $validatedData['cover_image'] = Storage::url($request->file('cover_image')->store('shops/images', 'public'));
+        }
+
+        if ($request->hasFile('logo')) {
+            $validatedData['logo'] = Storage::url($request->file('logo')->store('shops/logos', 'public'));
+        }
+
+        $shop = Shop::create($validatedData);
+
+        $shop->load('products');
+
         return Inertia::render('shop/profile', [
             'shop' => $shop
         ]);
