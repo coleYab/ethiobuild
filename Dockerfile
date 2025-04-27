@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     zip \
+    npm \
     && docker-php-ext-install zip pdo pdo_mysql
 
 # Install Composer
@@ -21,6 +22,8 @@ COPY . .
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
+RUN npm install
+RUN npm run build
 
 # Expose the port Laravel will serve on
 EXPOSE 8000
