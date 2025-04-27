@@ -39,14 +39,6 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
 
   return (
     <div className="space-y-6">
-
-      <h1>Shop Profile</h1>
-      <Tabs defaultValue="profile">
-        <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="products">Products</TabsTrigger>
-        </TabsList>
-        <TabsContent value="profile">
           <div className="flex items-center justify-between my-6">
             <h2 className="text-3xl font-bold tracking-tight">Shop Profile</h2>
             {auth.user.id == shop.user_id && <>
@@ -79,6 +71,14 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
               </>
               }
           </div>
+          
+      <Tabs defaultValue="profile">
+        <TabsList className="self-center w-2xl gap-4">
+          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="products">Products</TabsTrigger>
+        </TabsList>
+        <TabsContent value="profile">
+
 
           <div className="grid gap-6 md:grid-cols-2">
             <Card className="col-span-1">

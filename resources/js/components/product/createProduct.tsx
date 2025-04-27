@@ -1,7 +1,7 @@
 // "use client"
 
 import React, { useState } from "react"
-import { Plus, Trash2, Upload } from "lucide-react"
+import { Edit, Plus, PlusIcon, Trash2, Upload } from "lucide-react"
 import { useForm, usePage } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,19 +9,24 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 
-const defaultValues = {
+let defaultValues = {
   name: "",
+  shop_id: 1,
   description: "",
   image: "thisis image",
   variations: [{ name: "", sku: "", price: 0, qty_in_stock: 0 }],
 }
 
-export default function CreateProductForm() {
+export default function CreateProductForm({ product }: {product: any}) {
   const [imagePreview, setImagePreview] = useState<any>(null);
   const { errors } = usePage().props
+  defaultValues = {
+    ...defaultValues,
+    ...product
+  }
 
   // Initialize Inertia form
-  const { data, setData, post, processing, reset } = useForm(defaultValues)
+  const { data, setData, post, processing, reset, put } = useForm(defaultValues)
 
   // Handle variations array
   const addVariation = () => {
@@ -33,7 +38,7 @@ export default function CreateProductForm() {
 
   const removeVariation = (index: any) => {
     if (data.variations.length > 1) {
-      setData("variations", data.variations.filter((_, i) => i !== index))
+      setData("variations", data.variations.filter((_: any, i: number) => i !== index))
     }
   }
 
@@ -53,14 +58,18 @@ export default function CreateProductForm() {
   // Handle form submission
   const onSubmit = (e: any) => {
     e.preventDefault()
+    
+    if (product) {
+      put(`/product/${product.id}`)
+      return;
+    }
+
+    console.log("posting: ", data)
     post("/product", {
-      onSuccess: () => {
-        reset()
-        setImagePreview(null)
-      },
-      onError: () => {
-        // Errors are available in usePage().props.errors
-      },
+      onError: (e) => {
+        alert("ERror fucj youu");
+        console.log(`error happend ${JSON.stringify(e)}`)
+      }
     })
   }
 
@@ -163,7 +172,7 @@ export default function CreateProductForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {data.variations.map((variation, index) => (
+          {data.variations.map((variation: any, index: number) => (
             <div key={index}>
               {index > 0 && <Separator className="my-6" />}
               <div className="flex items-center justify-between">
@@ -306,7 +315,8 @@ export default function CreateProductForm() {
             Cancel
           </Button>
           <Button type="submit" disabled={processing}>
-            {processing ? "Creating..." : "Create Product"}
+            {product && !processing ? <Edit /> : !processing && <PlusIcon /> }
+            { !product ? processing ? "Creating..." : "Create Product" : processing ? "Editing..." : "Edit Product" } 
           </Button>
         </CardFooter>
       </Card>

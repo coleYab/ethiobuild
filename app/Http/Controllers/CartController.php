@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCartRequest;
 use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
@@ -54,7 +55,10 @@ class CartController extends Controller
      */
     public function show(Cart $cart) {
         $cart = $cart->loadMissing('items');
-        return $cart;
+        
+        return Inertia::render('cart/cart', [
+            'cart' => $cart
+        ]);
     }
 
     /**

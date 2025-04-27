@@ -35,10 +35,8 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $request = $request->validated();
-        $product = null;
-
-        // Create a big transaction to crete the product
-        DB::transaction( function() use ($request) {
+        // return "fuck youu";
+        $product = DB::transaction( function() use ($request) {
             $product = Product::create([
                 'name' => $request['name'],
                 'image' => $request['image'],
@@ -53,9 +51,12 @@ class ProductController extends Controller
                     "qty_in_stock" => $variation['qty_in_stock']
                 ]);
             }
+            return $product;
         });
 
-        return Inertia::render('product.show', [
+
+        $product->loadMissing('variations');
+        return Inertia::render('product/show', [
             'products' => $product
         ]);
     }
@@ -76,7 +77,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $product = $product->loadMissing('variations');
+        return Inertia::render('product/create', [
+            'product' => $product
+        ]);
     }
 
     /**
@@ -103,7 +107,10 @@ class ProductController extends Controller
             }
         });
 
-        return $product;
+        $product = $product->loadMissing('variations');
+        return Inertia::render('product/create', [
+            'product' => $product
+        ]);
     }
 
     /**

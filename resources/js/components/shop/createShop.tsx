@@ -1,12 +1,14 @@
 "use client"
 
 import React, { useState } from "react"
-import { useForm, router } from "@inertiajs/react"
+import { useForm, router, usePage } from "@inertiajs/react"
 import { Building2, Mail, Phone, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { json } from "stream/consumers"
+import { SharedData } from "@/types"
 // import { useToast } from "@/hooks/use-toast"
 
 // Default values for the form
@@ -16,16 +18,19 @@ const defaultValues = {
   email: "",
   phone: "",
   description: "",
-  image: null,
-  cover_image: null,
-  logo: null,
+  image: "image",
+  cover_image: "iamge",
+  logo: "mage",
+  user_id: 0,
 }
 
 export default function CreateShopForm() {
+  const { auth } = usePage<SharedData>().props;
   // const { toast } = useToast()
-  const [imagePreview, setImagePreview] = useState<any>(null)
-  const [coverImagePreview, setCoverImagePreview] = useState<any>(null)
-  const [logoPreview, setLogoPreview] = useState<any>(null)
+  const [imagePreview, setImagePreview] = useState<any>("image")
+  const [coverImagePreview, setCoverImagePreview] = useState<any>("image")
+  const [logoPreview, setLogoPreview] = useState<any>("image")
+  defaultValues.user_id = auth.user.id;
 
   // Initialize Inertia form
   const { data, setData, post, processing, errors } = useForm(defaultValues)
@@ -52,7 +57,12 @@ export default function CreateShopForm() {
   // Handle form submission
   const onSubmit = (e: any) => {
     e.preventDefault()
-    post("/shop")
+    console.log(data)
+    post("/shop", {
+      onError: (e) => {
+        console.log(JSON.stringify(e))
+      }
+    })
   }
 
   return (

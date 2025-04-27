@@ -14,16 +14,15 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@radix-ui/react-tabs';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Create Product',
+        title: 'Discover Shops',
         href: '/dashboard',
     },
 ];
 
 export default function Shops({ shops } : { shops : any[] }) {
-    console.log(shops)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Discover Shops" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <ShopsList shops={shops} />
             </div>

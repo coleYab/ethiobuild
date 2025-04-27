@@ -36,7 +36,11 @@ class ShopController extends Controller
     public function store(StoreShopRequest $request)
     {
         $request = $request->validated();
-        return Shop::create($request);
+        $shop = Shop::create($request);
+        $shop = $shop->loadMissing('products');
+        return Inertia::render('shop/profile', [
+            'shop' => $shop
+        ]);
     }
 
     /**
