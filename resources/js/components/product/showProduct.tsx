@@ -27,7 +27,7 @@ export default function ProductPage({ products } : {products : any}) {
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
-            currency: "USD",
+            currency: "Birr",
         }).format(price / 100)
     }
 
@@ -48,15 +48,6 @@ export default function ProductPage({ products } : {products : any}) {
             cart.items = [...cart.items, newItem];
         }
 
-        const cartPayload = {
-            items: cart.items.map((item: any) => {
-                return {
-                    product_id: item.product_id,
-                    qty: item.qty
-                }
-            } )
-        }
-
         router.put(`/cart/${cart.id}`, cart, {
             onSuccess: () => {
                 alert("updated the data sucessfully added to cart");
@@ -74,7 +65,7 @@ export default function ProductPage({ products } : {products : any}) {
                 <div className="space-y-4">
                     <div className="relative aspect-square overflow-hidden rounded-xl border bg-background">
                         <img
-                            src={`/placeholder.svg?height=600&width=600&text=Product+Image+${activeImage + 1}`}
+                            src={product.image}
                             alt={product.name}
                             className="object-cover"
                         />
@@ -91,7 +82,7 @@ export default function ProductPage({ products } : {products : any}) {
                                 }}
                             >
                                 <img
-                                    src={`/placeholder.svg?height=200&width=200&text=Variation+${index + 1}`}
+                                    src={product.image}
                                     alt={variation.name}
                                     className="object-cover"
                                 />

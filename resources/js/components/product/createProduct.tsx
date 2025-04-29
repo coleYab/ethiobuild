@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { Edit, Plus, PlusIcon, Trash2, Upload } from "lucide-react"
 import { useForm, usePage } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
@@ -28,7 +28,7 @@ export default function CreateProductForm({ product, shop_id }: {product: any, s
     }
 
     // Initialize Inertia form
-    const { data, setData, post, processing, reset, put } = useForm(defaultValues)
+    const { data, setData, post, processing, put } = useForm(defaultValues)
 
     // Handle variations array
     const addVariation = () => {
@@ -48,7 +48,7 @@ export default function CreateProductForm({ product, shop_id }: {product: any, s
     const handleImageChange = (e: any) => {
         const file = e.target.files?.[0]
         if (file) {
-            setData("image", "tthis is image")
+            setData("image", file)
             const reader = new FileReader()
             reader.onloadend = () => {
                 setImagePreview(reader.result)
@@ -69,7 +69,6 @@ export default function CreateProductForm({ product, shop_id }: {product: any, s
         console.log("posting: ", data)
         post("/product", {
             onError: (e) => {
-                alert("ERror fucj youu");
                 console.log(`error happend ${JSON.stringify(e)}`)
             }
         })

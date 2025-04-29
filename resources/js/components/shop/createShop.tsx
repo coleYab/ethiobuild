@@ -1,17 +1,14 @@
-"use client"
-
-import React, { useState } from "react"
+import { useState } from "react"
 import { useForm, router, usePage } from "@inertiajs/react"
 import { Building2, Mail, Phone, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { json } from "stream/consumers"
 import { SharedData } from "@/types"
-// import { useToast } from "@/hooks/use-toast"
 
-// Default values for the form
+type ImageType = "image" | "cover_image" | "logo"
+
 const defaultValues = {
   name: "",
   address: "",
@@ -22,10 +19,9 @@ const defaultValues = {
   cover_image: null,
   logo: null,
   user_id: 0,
-  user_id: 0,
 }
 
-export default function CreateShopForm({ shopId } : { shopId : number } ) {
+export default function CreateShopForm() {
   const { auth } = usePage<SharedData>().props;
   const [imagePreview, setImagePreview] = useState<any>("image")
   const [coverImagePreview, setCoverImagePreview] = useState<any>("image")
@@ -35,7 +31,7 @@ export default function CreateShopForm({ shopId } : { shopId : number } ) {
 
   const { data, setData, post, processing, errors } = useForm(defaultValues)
 
-  const handleImageChange = (e: any, imageType: string) => {
+  const handleImageChange = (e: any, imageType: ImageType) => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
