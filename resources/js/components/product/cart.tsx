@@ -125,101 +125,88 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
-  // Initialize form for shipping information
-  const { data, setData, post, processing, errors } = useForm({
-    firstName: "",
-    lastName: "",
-    email: "",
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
-    phone: "",
-  });
+    const [localCart, setLocalCart] = useState({ items: cart });
 
-  // Local state for cart (optimistic updates)
-  const [localCart, setLocalCart] = useState({ items: cart });
+    // Calculate subtotal for an item
+    const calculateItemSubtotal = (item) => {
+        return item.qty * item.product.price;
+    };
 
-  // Calculate subtotal for an item
-  const calculateItemSubtotal = (item) => {
-    return item.qty * item.product.price;
-  };
+    // Calculate cart subtotal
+    const calculateSubtotal = () => {
+        return localCart.items.reduce((total, item) => total + calculateItemSubtotal(item), 0);
+    };
 
-  // Calculate cart subtotal
-  const calculateSubtotal = () => {
-    return localCart.items.reduce((total, item) => total + calculateItemSubtotal(item), 0);
-  };
+    // Calculate tax
+    const calculateTax = () => {
+        return calculateSubtotal() * taxRate;
+    };
 
-  // Calculate tax
-  const calculateTax = () => {
-    return calculateSubtotal() * taxRate;
-  };
+    // Calculate total
+    const calculateTotal = () => {
+        return calculateSubtotal() + calculateTax() + shippingCost;
+    };
 
-  // Calculate total
-  const calculateTotal = () => {
-    return calculateSubtotal() + calculateTax() + shippingCost;
-  };
+    // Update item quantity
+    const updateQuantity = (itemId, newQty) => {
+        if (newQty < 1) return;
 
-  // Update item quantity
-  const updateQuantity = (itemId, newQty) => {
-    if (newQty < 1) return;
+        const item = localCart.items.find((item) => item.id === itemId);
+        if (newQty > item.product.qty_in_stock) return;
 
-    const item = localCart.items.find((item) => item.id === itemId);
-    if (newQty > item.product.qty_in_stock) return;
+        // Optimistic update
+        const updatedItems = localCart.items.map((item) => {
+            if (item.id === itemId) {
+                return { ...item, qty: newQty };
+            }
+            return item;
+        });
+        setLocalCart({ ...localCart, items: updatedItems });
 
-    // Optimistic update
-    const updatedItems = localCart.items.map((item) => {
-      if (item.id === itemId) {
-        return { ...item, qty: newQty };
-      }
-      return item;
-    });
-    setLocalCart({ ...localCart, items: updatedItems });
+        // Send update to backend
+        router.post(`/cart/items/${itemId}`, { qty: newQty }, {
+            preserveState: true,
+            onError: () => {
+                // Revert on error
+                setLocalCart(localCart);
+            },
+        });
+    };
 
-    // Send update to backend
-    router.post(`/cart/items/${itemId}`, { qty: newQty }, {
-      preserveState: true,
-      onError: () => {
-        // Revert on error
-        setLocalCart(localCart);
-      },
-    });
-  };
+    // Remove item from cart
+    const removeItem = (itemId) => {
+        // Optimistic update
+        const updatedItems = localCart.items.filter((item) => item.id !== itemId);
+        setLocalCart({ ...localCart, items: updatedItems });
 
-  // Remove item from cart
-  const removeItem = (itemId) => {
-    // Optimistic update
-    const updatedItems = localCart.items.filter((item) => item.id !== itemId);
-    setLocalCart({ ...localCart, items: updatedItems });
+        // Send delete to backend
+        router.delete(`/cart/items/${itemId}`, {
+            preserveState: true,
+            onError: () => {
+                // Revert on error
+                setLocalCart(localCart);
+            },
+        });
+    };
 
-    // Send delete to backend
-    router.delete(`/cart/items/${itemId}`, {
-      preserveState: true,
-      onError: () => {
-        // Revert on error
-        setLocalCart(localCart);
-      },
-    });
-  };
+    // Handle Chapa checkout
+    const handleChapaCheckout = () => {
+        // post("/checkout", {
+        //     onSuccess: ({ props }) => {
+        //         // Assuming backend returns a Chapa payment URL
+        //         if (props.paymentUrl) {
+        //             window.location.href = props.paymentUrl;
+        //         } else {
+        //             alert("Redirecting to Chapa payment gateway...");
+        //         }
+        //     },
+        //     onError: () => {
+        //         alert("Checkout failed. Please try again.");
+        //     },
+        // });
+    };
 
-  // Handle Chapa checkout
-  const handleChapaCheckout = () => {
-    post("/checkout", {
-      onSuccess: ({ props }) => {
-        // Assuming backend returns a Chapa payment URL
-        if (props.paymentUrl) {
-          window.location.href = props.paymentUrl;
-        } else {
-          alert("Redirecting to Chapa payment gateway...");
-        }
-      },
-      onError: () => {
-        alert("Checkout failed. Please try again.");
-      },
-    });
-  };
-
-  return (
+    return (
     <div className="container mx-auto py-10 px-4 md:px-6">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
@@ -289,102 +276,7 @@ export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
               )}
             </CardContent>
           </Card>
-
-          {/* Shipping Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Shipping Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    value={data.firstName}
-                    onChange={(e) => setData("firstName", e.target.value)}
-                    placeholder="Enter your first name"
-                  />
-                  {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    value={data.lastName}
-                    onChange={(e) => setData("lastName", e.target.value)}
-                    placeholder="Enter your last name"
-                  />
-                  {errors.lastName && <p className="text-sm text-destructive">{errors.lastName}</p>}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={data.email}
-                  onChange={(e) => setData("email", e.target.value)}
-                  placeholder="Enter your email"
-                />
-                {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
-                <Input
-                  id="address"
-                  value={data.address}
-                  onChange={(e) => setData("address", e.target.value)}
-                  placeholder="Enter your address"
-                />
-                {errors.address && <p className="text-sm text-destructive">{errors.address}</p>}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input
-                    id="city"
-                    value={data.city}
-                    onChange={(e) => setData("city", e.target.value)}
-                    placeholder="City"
-                  />
-                  {errors.city && <p className="text-sm text-destructive">{errors.city}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state">State/Region</Label>
-                  <Input
-                    id="state"
-                    value={data.state}
-                    onChange={(e) => setData("state", e.target.value)}
-                    placeholder="State/Region"
-                  />
-                  {errors.state && <p className="text-sm text-destructive">{errors.state}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="zip">Postal Code</Label>
-                  <Input
-                    id="zip"
-                    value={data.zip}
-                    onChange={(e) => setData("zip", e.target.value)}
-                    placeholder="Postal code"
-                  />
-                  {errors.zip && <p className="text-sm text-destructive">{errors.zip}</p>}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  value={data.phone}
-                  onChange={(e) => setData("phone", e.target.value)}
-                  placeholder="Enter your phone number"
-                />
-                {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
+          </div>
         {/* Order Summary */}
         <div className="lg:col-span-1">
           <Card className="sticky top-4">
@@ -395,10 +287,6 @@ export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span>${calculateSubtotal().toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>${shippingCost.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Tax (15%)</span>
@@ -415,7 +303,7 @@ export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
                 className="w-full bg-green-600 hover:bg-green-700 text-white"
                 size="lg"
                 onClick={handleChapaCheckout}
-                disabled={processing}
+                // disabled={processing}
               >
                 <CreditCard className="mr-2 h-5 w-5" />
                 Pay with Chapa
@@ -427,6 +315,7 @@ export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
           </Card>
         </div>
       </div>
-    </div>
+    </div>    
+  // </div>
   );
 }

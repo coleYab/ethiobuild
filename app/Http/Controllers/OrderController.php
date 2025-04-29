@@ -35,15 +35,15 @@ class OrderController extends Controller
 
         $user = $user->loadMissing('orders');
         $orders = $user->orders;
-        $orders = $orders->each(function ($order) {
-            $order = $order->loadMissing('items');
-            $order->items->each(function ($item) {
-                $item = $item->load('product');
-                $item = $item->product->loadMissing('product');
-                return $item;
-            });
-            return $order;
-        });
+        // $orders = $orders->each(function ($order) {
+        //     $order = $order->loadMissing('items');
+        //     $order->items->each(function ($item) {
+        //         $item = $item->load('product');
+        //         $item = $item->product->loadMissing('product');
+        //         return $item;
+        //     });
+        //     return $order;
+        // });
 
         return $orders;
     }
