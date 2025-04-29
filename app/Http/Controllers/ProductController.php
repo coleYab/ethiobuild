@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Storage;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -34,7 +35,13 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+        $or = $request;
         $request = $request->validated();
+
+        // upload images
+        if ($or->hasFile('image')) {
+            $request['image'] = Storage::url($or->file('image')->store('products/images', 'public'));
+        }
 
         $product = DB::transaction( function() use ($request) {
             $product = Product::create([
