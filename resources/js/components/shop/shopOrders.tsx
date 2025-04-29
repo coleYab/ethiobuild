@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { usePage } from "@inertiajs/react"
+import { Link, usePage } from "@inertiajs/react"
 import { Calendar, Eye, MoreHorizontal, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -175,10 +175,11 @@ export default function OrdersPage({ orders } : { orders : any }) {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem>
-                              <Eye className="mr-2 h-4 w-4" /> View Details
+                              <Link className="flex" href={`/order/${order.id}`} prefetch>
+                                <Eye className="mr-2 h-4 w-4" /> View Details                              
+                              </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Update Status</DropdownMenuItem>
+                            {/* <DropdownMenuSeparator /> */}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>

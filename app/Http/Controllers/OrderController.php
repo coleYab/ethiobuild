@@ -14,6 +14,7 @@ use App\Models\ProductVariation;
 use Error;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class OrderController extends Controller
 {
@@ -35,7 +36,7 @@ class OrderController extends Controller
 
         $user = $user->loadMissing('orders');
         $orders = $user->orders;
-        // $orders = $orders->each(function ($order) {
+        // return $orders->each(function ($order) {
         //     $order = $order->loadMissing('items');
         //     $order->items->each(function ($item) {
         //         $item = $item->load('product');
@@ -45,7 +46,9 @@ class OrderController extends Controller
         //     return $order;
         // });
 
-        return $orders;
+        return Inertia::render('order/me', [
+            'orders' => $orders
+        ]);
     }
 
     /**
@@ -101,7 +104,7 @@ class OrderController extends Controller
         });
 
         // TODO: the order has been created redirect the user to the payment page
-        return response()->json($response);
+        return redirect("/order/$response->id/checkout");
     }
 
     /**
@@ -110,7 +113,14 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $order = $order->loadMissing('items');
-        return $order;
+                $order->items->each(function ($item) {
+                $item = $item->load('product');
+                $item = $item->product->loadMissing('product');
+                return $item;
+            });
+        return Inertia::render('order/show', [
+            'order' => $order
+        ]);
     }
 
     /**
@@ -144,7 +154,7 @@ class OrderController extends Controller
                 'Authorization' => 'Bearer ' . $secret_key ,
                 'Content-Type' => 'application/json',
             ])->post('https://api.chapa.co/v1/transaction/initialize', [
-                'amount' => '10',
+                'amount' => "$order->order_cost",
                 'currency' => 'ETB',
                 'email' => $user->email,
                 'tx_ref' => $ref_no,
