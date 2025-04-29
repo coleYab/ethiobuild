@@ -11,12 +11,15 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::resource('cart', CartController::class);
-Route::resource('order', OrderController::class);
-Route::get('order/{id}/checkout', [OrderController::class, 'checkout' ]);
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('order/{id}/checkout', [OrderController::class, 'checkout' ]);
+    Route::post('order/complete', [OrderController::class, 'complete' ]);
+    Route::get('cart/me', [ CartController::class, 'me']);
+    Route::get('order/me', [ OrderController::class, 'me']);
+    Route::resource('order', OrderController::class);
+    Route::resource('cart', CartController::class);
     Route::resource('product', ProductController::class);
-    
+
     Route::get('shop/me', [ ShopController::class, 'me']);
     Route::resource('shop', ShopController::class);
     Route::get('shop/{id}/products', [ShopController::class, 'products']);

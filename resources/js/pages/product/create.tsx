@@ -19,7 +19,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Create({ product } : { product : any }) {
+export default function Create({ product, shop_id } : { product : any, shop_id: any }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -31,7 +31,7 @@ export default function Create({ product } : { product : any }) {
                 </div>
 
                 <div className="lg:mx-36 w-3xl">
-                    <CreateProductForm product={product} />
+                    <CreateProductForm product={product} shop_id={shop_id} />
                 </div>
             </div>
         </AppLayout>

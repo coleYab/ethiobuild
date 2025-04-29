@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use App\Models\Product;
 use App\Models\ProductVariation;
-use App\Models\User;
 use Error;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -27,6 +30,24 @@ class OrderController extends Controller
      */
     public function create() {}
 
+    public function me() {
+        $user = request()->user();
+
+        $user = $user->loadMissing('orders');
+        $orders = $user->orders;
+        $orders = $orders->each(function ($order) {
+            $order = $order->loadMissing('items');
+            $order->items->each(function ($item) {
+                $item = $item->load('product');
+                $item = $item->product->loadMissing('product');
+                return $item;
+            });
+            return $order;
+        });
+
+        return $orders;
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -35,7 +56,7 @@ class OrderController extends Controller
         $request = $request->validated();
 
         $response = DB::transaction(function () use($request) {
-            $user_id = 1; // TODO: make it dynamic
+            $user = request()->user();
             $response = ['amount'=>0, 'message' => ""];
             $total_amount = 1;
 
@@ -58,14 +79,14 @@ class OrderController extends Controller
             $response['message'] = "Order created successfully";
 
             $order = Order::create([
-                'user_id' => $user_id,
+                'user_id' => $user->id,
                 'order_status' => 'created',
                 'order_cost' => $total_amount,
             ]);
 
             foreach ($request['items'] as $order_item) {
                 $product_id = $order_item['product_id'];
-                $product = ProductVariation::find($product_id);
+                $product = ProductVariation::findOrFail($product_id);
                 $order->items()->create([
                     'product_id' => $product_id,
                     'qty' => $order_item['qty'],
@@ -74,10 +95,12 @@ class OrderController extends Controller
             }
 
             $order = $order->loadMissing('items');
+
+            // redirect them to pay with chapa
             return $order;
         });
 
-        // TODO: the order has been created redirect the user to the checkout page
+        // TODO: the order has been created redirect the user to the payment page
         return response()->json($response);
     }
 
@@ -90,49 +113,82 @@ class OrderController extends Controller
         return $order;
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function complete(int $id)
+    {
+        Log::info("getting the data of the name is the thing: " . $id);
+        return response()->json("ok");
+    }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function checkout($id)
     {
+        // Retrieve the order and user (assuming $id is the order ID)
         $order = Order::findOrFail($id);
-        $user = User::findOrFail(1);
+        $user = request()->user(); // Assuming the user is authenticated
 
+        // Generate a unique transaction reference
+        $ref_no = Str::random(10);
+        $secret_key = "CHASECK_TEST-nlCF26UGAshYeA3jBqlk5nMMR0xcZI9C";
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.chapa.co/v1/transaction/initialize',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS =>`{
-            "amount":"10",
-            "currency": "ETB",
-            "email": $user->email,
-            "tx_ref": $ref_no,
-            "callback_url": "https://webhook.site/17dcb8c5-0c6d-47dc-be13-741984fd3495",
-            "return_url": "http://localhost:8000/",
-            "customization[title]": "Payment for my favourite merchant",
-            "customization[description]": "I love online payments.",
-            "meta[hide_receipt]": "true"
-            }`,
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer CHASECK_TEST-***********************',
-                'Content-Type: application/json'
-            ),
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
+        $url = "https://itchy-tigers-win.loca.lt/order/complete";
 
-        $order->order_status = 'Completed';
-        $order->save();
+        try {
+            // Make the API request using Laravel's HTTP client
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $secret_key ,
+                'Content-Type' => 'application/json',
+            ])->post('https://api.chapa.co/v1/transaction/initialize', [
+                'amount' => '10',
+                'currency' => 'ETB',
+                'email' => $user->email,
+                'tx_ref' => $ref_no,
+                'callback_url' => $url,
+                'return_url' => "https://itchy-tigers-win.loca.lt" . '/',
+                'customization' => [
+                    'title' => 'Ecommerce',
+                    'description' => 'I love online payments.',
+                ],
+                'meta' => [
+                    'hide_receipt' => false,
+                ],
+            ]);
 
-        return $order;
+            // Check if the request was successful
+            if ($response->successful()) {
+                // Update the order status
+                $order->order_status = 'Completed';
+                $order->save();
+                $checkoutUrl = $response->json()['data']['checkout_url'];
+                return redirect($checkoutUrl);
+            } else {
+                // Log the error for debugging
+                Log::error('Chapa payment initialization failed', [
+                    'response' => $response->json(),
+                    'status' => $response->status(),
+                ]);
+
+                return response()->json([
+                    'message' => 'Payment initialization failed',
+                    'error' => $response->json(),
+                ], 400);
+            }
+        } catch (\Exception $e) {
+            // Log any exceptions
+            Log::error('Error during Chapa payment initialization', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'message' => 'An error occurred during payment processing',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

@@ -30,12 +30,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'My Orders',
-        href: '/orders/my',
+        href: '/order/me',
         icon: ListOrdered,
     },
     {
         title: 'My Cart',
-        href: '/cart/my',
+        href: '/cart/me',
         icon: ShoppingCart,
     },
 ];

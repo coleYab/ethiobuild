@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCartRequest;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateCartRequest;
 use App\Models\Cart;
+use App\Models\ProductVariation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -17,7 +18,15 @@ class CartController extends Controller
      */
     public function index()
     {
-        return Cart::with('items')->get();
+        $carts =  Cart::with('items')->get();
+        $carts = $carts->each(function ($cart) {
+            return $cart->items->each(function ($item) {
+                $item->loadMissing('product');
+            });
+
+        });
+
+        return $carts;
     }
 
     /**
@@ -40,11 +49,12 @@ class CartController extends Controller
             $cart = Cart::create([
                 'user_id' => $user->id,
             ]);
-
             foreach ($request['items'] as $cart_item) {
+                $product_id = $cart_item['product_id'];
+                $product = ProductVariation::findOrFail($product_id);
                 $cart->items()->create([
                     'qty' => $cart_item['qty'],
-                    'product_id' => $cart_item['product_id'],
+                    'product_id' => $product->id,
                 ]);
             }
         });
@@ -55,7 +65,10 @@ class CartController extends Controller
      */
     public function show(Cart $cart) {
         $cart = $cart->loadMissing('items');
-        
+        $cart = $cart->items->each(function ($item) {
+            return $item->loadMissing('product');
+        });
+
         return Inertia::render('cart/cart', [
             'cart' => $cart
         ]);
@@ -70,6 +83,23 @@ class CartController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function me()
+    {
+        $user = request()->user();
+        $user->load('cart');
+        $cart = $user->cart;
+        $cart = $cart->load('items');
+        $cart = $cart->items->each(function ($item) {
+            return $item->loadMissing('product');
+        });
+        return Inertia::render('cart/cart', [
+            'cart' => $cart
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateCartRequest $request, Cart $cart)
@@ -78,9 +108,11 @@ class CartController extends Controller
         DB::transaction(function () use($request, $cart) {
             $cart->items()->delete();
             foreach ($request['items'] as $cart_item) {
+                $product_id = $cart_item['product_id'];
+                $product = ProductVariation::findOrFail($product_id);
                 $cart->items()->create([
                     'qty' => $cart_item['qty'],
-                    'product_id' => $cart_item['product_id'],
+                    'product_id' => $product_id,
                 ]);
             }
         });

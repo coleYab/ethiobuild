@@ -39,6 +39,10 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $user = $request->user();
+        if ($user) $user = $user->loadMissing('cart');
+        if ($user) $user->cart->loadMissing('items');
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -48,7 +52,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'ziggy' => fn (): array => [
                 ...(new Ziggy)->toArray(),
-                'location' => $request->url(),
+                'location' => $user,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

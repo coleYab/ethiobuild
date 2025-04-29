@@ -35,7 +35,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $request = $request->validated();
-        // return "fuck youu";
+
         $product = DB::transaction( function() use ($request) {
             $product = Product::create([
                 'name' => $request['name'],

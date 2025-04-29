@@ -23,6 +23,7 @@ interface AddToCartSectionProps {
 }
 
 export default function AddToCartSection({ variations }: AddToCartSectionProps) {
+
   const [selectedVariation, setSelectedVariation] = useState<number>(variations[0].id)
   const [quantity, setQuantity] = useState(1)
 

@@ -22,20 +22,19 @@ const defaultValues = {
   cover_image: null,
   logo: null,
   user_id: 0,
+  user_id: 0,
 }
 
-export default function CreateShopForm() {
+export default function CreateShopForm({ shopId } : { shopId : number } ) {
   const { auth } = usePage<SharedData>().props;
-  // const { toast } = useToast()
   const [imagePreview, setImagePreview] = useState<any>("image")
   const [coverImagePreview, setCoverImagePreview] = useState<any>("image")
   const [logoPreview, setLogoPreview] = useState<any>("image")
   defaultValues.user_id = auth.user.id;
 
-  // Initialize Inertia form
+
   const { data, setData, post, processing, errors } = useForm(defaultValues)
 
-  // Handle image change
   const handleImageChange = (e: any, imageType: string) => {
     const file = e.target.files?.[0]
     if (file) {
