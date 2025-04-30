@@ -75,7 +75,7 @@ class ShopController extends Controller
      */
     public function me()
     {
-        $user = auth()->user();
+        $user = request()->user();
         $user->loadMissing('shops');
         $shops = $user->shops;
         return Inertia::render('shop/index', [

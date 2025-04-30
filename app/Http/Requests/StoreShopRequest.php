@@ -22,15 +22,15 @@ class StoreShopRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => ['required' , 'string'],
-            "address" => ['required' , 'string'],
-            "user_id" => ['required' , 'integer'],
-            "image" => ['required' , 'image'],
-            "cover_image" => ['required' , 'image'],
-            "email" => ['required' , 'string'],
-            "phone" => ['required' , 'string'],
-            "logo" => ['required' , 'image'],
-            "description" => ['required' , 'string'],
+            "name" => ['required', 'string'],
+            "address" => ['required', 'string'],
+            "user_id" => ['required', 'integer'],
+            "image" => ['required', 'image'],
+            "cover_image" => ['required', 'image'],
+            "email" => ['required', 'string'],
+            "phone" => ['required', 'string'],
+            "logo" => ['required', 'image'],
+            "description" => ['required', 'string'],
         ];
     }
 }
