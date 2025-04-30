@@ -14,14 +14,13 @@ export default function Create({ product, shop_id } : { product : any, shop_id: 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Product" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 items-center">
-
-                <div className="mb-8 flex flex-col">
+            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+                <div className="mb-8 flex flex-col self-center">
                     <h1 className="text-2xl font-bold sm:text-3xl">Create New Product</h1>
                     <p className="mt-1 text-gray-500">Add a new product to your shop with variations.</p>
                 </div>
 
-                <div className="lg:mx-36 w-3xl">
+                <div className="lg:mx-36 max-w-3xl">
                     <CreateProductForm product={product} shop_id={shop_id} />
                 </div>
             </div>

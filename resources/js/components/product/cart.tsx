@@ -1,17 +1,3 @@
-// import React from 'react';
-// import { Head, router, usePage } from '@inertiajs/react';
-// import { Button } from '@/components/ui/button';
-// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-// import { ArrowUpToLine, Trash2 } from 'lucide-react';
-// import { SharedData } from '@/types';
-//
-// const CartPage = ({ cart} : {cart: any}) => {
-//     const { auth } = usePage<SharedData>().props;
-//     const user = auth.user;
-//     // Sample cart data structure based on validation rules
-//     const cartItems = cart?.items || [];
-//
 //     const handleCheckout = () => {
 //         const cart : any = user.cart;
 //         const items = cart.items;
@@ -57,139 +43,53 @@
 //         })
 //     };
 //
-//     return (
-//         <div className="container mx-auto p-4">
-//             <Head title="Shopping Cart" />
-//
-//             <Card className="max-w-4xl mx-auto">
-//                 <CardHeader>
-//                     <CardTitle className="text-2xl">Your Shopping Cart</CardTitle>
-//                 </CardHeader>
-//                 <CardContent>
-//                     {cartItems.length === 0 ? (
-//                         <p className="text-center text-gray-500">Your cart is empty.</p>
-//                     ) : (
-//                             <>
-//                                 <Table>
-//                                     <TableHeader>
-//                                         <TableRow>
-//                                             <TableHead>Product ID</TableHead>
-//                                             <TableHead>Quantity</TableHead>
-//                                             <TableHead>Actions</TableHead>
-//                                         </TableRow>
-//                                     </TableHeader>
-//                                     <TableBody>
-//                                         {cartItems.map((item: any, index : number ) => (
-//                                             <TableRow key={index}>
-//                                                 <TableCell>{item.product_id}</TableCell>
-//                                                 <TableCell>{item.qty}</TableCell>
-//                                                 <TableCell>
-//                                                     <Button
-//                                                         variant="destructive"
-//                                                         size="sm"
-//                                                         onClick={() => handleRemoveItem(index)}
-//                                                     >
-//                                                         <Trash2 className="h-4 w-4" />
-//                                                     </Button>
-//                                                 </TableCell>
-//                                             </TableRow>
-//                                         ))}
-//                                     </TableBody>
-//                                 </Table>
-//                                 <div className="mt-6 flex justify-end">
-//                                     <Button
-//                                         onClick={handleCheckout}
-//                                         className="bg-primary hover:bg-primary/90"
-//                                         disabled={cartItems.length === 0}
-//                                     >
-//                                         Proceed to Checkout
-//                                     </Button>
-//                                 </div>
-//                             </>
-//                         )}
-//                 </CardContent>
-//             </Card>
-//         </div>
-//     );
-// };
-//
-// export default CartPage;
 import { useState } from "react";
-import { router, useForm } from "@inertiajs/react";
 import { Trash2, MinusCircle, PlusCircle, CreditCard } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
-export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
-    const [localCart, setLocalCart] = useState({ items: cart });
+export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 } : { cart: any, shippingCost: number, taxRate: number}) {
+  const [localCart, setLocalCart] = useState({ items: cart });
 
-    // Calculate subtotal for an item
-    const calculateItemSubtotal = (item) => {
+    const calculateItemSubtotal = (item: any) => {
         return item.qty * item.product.price;
     };
 
-    // Calculate cart subtotal
     const calculateSubtotal = () => {
-        return localCart.items.reduce((total, item) => total + calculateItemSubtotal(item), 0);
+        return localCart.items.reduce((total: number, item: any) => total + calculateItemSubtotal(item), 0);
     };
 
-    // Calculate tax
     const calculateTax = () => {
         return calculateSubtotal() * taxRate;
     };
 
-    // Calculate total
     const calculateTotal = () => {
         return calculateSubtotal() + calculateTax() + shippingCost;
     };
 
-    // Update item quantity
-    const updateQuantity = (itemId, newQty) => {
+    const updateQuantity = (itemId: number, newQty:number) => {
         if (newQty < 1) return;
 
-        const item = localCart.items.find((item) => item.id === itemId);
+        const item = localCart.items.find((item: any) => item.id === itemId);
         if (newQty > item.product.qty_in_stock) return;
 
-        // Optimistic update
-        const updatedItems = localCart.items.map((item) => {
+        const updatedItems = localCart.items.map((item : any) => {
             if (item.id === itemId) {
                 return { ...item, qty: newQty };
             }
             return item;
         });
-        setLocalCart({ ...localCart, items: updatedItems });
 
-        // Send update to backend
-        router.post(`/cart/items/${itemId}`, { qty: newQty }, {
-            preserveState: true,
-            onError: () => {
-                // Revert on error
-                setLocalCart(localCart);
-            },
-        });
+        setLocalCart({ ...localCart, items: updatedItems });
     };
 
-    // Remove item from cart
-    const removeItem = (itemId) => {
-        // Optimistic update
-        const updatedItems = localCart.items.filter((item) => item.id !== itemId);
+    const removeItem = (itemId: number) => {
+        const updatedItems = localCart.items.filter((item : any) => item.id !== itemId);
         setLocalCart({ ...localCart, items: updatedItems });
-
-        // Send delete to backend
-        router.delete(`/cart/items/${itemId}`, {
-            preserveState: true,
-            onError: () => {
-                // Revert on error
-                setLocalCart(localCart);
-            },
-        });
     };
 
-    // Handle Chapa checkout
     const handleChapaCheckout = () => {
         // post("/checkout", {
         //     onSuccess: ({ props }) => {
@@ -224,11 +124,11 @@ export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
                   <p className="text-muted-foreground">Your cart is empty</p>
                 </div>
               ) : (
-                localCart.items.map((item) => (
-                  <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 py-4">
+                localCart.items.map((item : any) => (
+                  <div key={item.id} className="grid grid-cols-2 grid-rows-2 md:flex md:flex-row md:items-start justify-center items-center gap-4 py-4">
                     <div className="bg-muted rounded-md flex items-center justify-center w-16 h-16 shrink-0">
                       <img
-                        src={`/placeholder.svg?height=64&width=64&text=${item.product.name.charAt(0)}`}
+                        src={item.product.product.image}
                         alt={item.product.name}
                         className="rounded-md w-16 h-16"
                       />
@@ -259,8 +159,8 @@ export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
                         <span className="sr-only">Increase quantity</span>
                       </Button>
                     </div>
-                    <div className="text-right min-w-[80px]">
-                      <div className="font-medium">${calculateItemSubtotal(item).toFixed(2)}</div>
+                    <div className="text-right min-w-[80px] flex justify-center gap-2 items-center">
+                      <div className="font-medium">ETB {calculateItemSubtotal(item).toFixed(2)}</div>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -303,7 +203,6 @@ export default function Checkout({ cart, shippingCost = 100, taxRate = 0.15 }) {
                 className="w-full bg-green-600 hover:bg-green-700 text-white"
                 size="lg"
                 onClick={handleChapaCheckout}
-                // disabled={processing}
               >
                 <CreditCard className="mr-2 h-5 w-5" />
                 Pay with Chapa

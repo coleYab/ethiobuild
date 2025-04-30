@@ -19,21 +19,23 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory(1)->create([ 
-            'password' => 'gamegame',   
+        User::factory(1)->create([
+            'password' => 'gamegame',
             'email' => 'test@gmail.com'
         ])->each(function ($user) {
-            Shop::factory(10)->create([
-                'user_id' => $user->id
-            ])->each(function ($shop) {
-                    Product::factory(10)->create([
-                        'shop_id' => $shop->id
-                    ])->each(function ($product) {
-                        ProductVariation::factory(5)->create([
-                            'product_id' => $product->id
-                        ]);
+                Shop::factory(rand(0, 10))->create([
+                    'user_id' => $user->id,
+                    'logo' => 'http://localhost:8000/storage/products/images/998mVTmmQItKu32PUwsIxa84eEnAQCtrajFLeMkJ.png'
+                ])->each(function ($shop) {
+                        Product::factory(rand(5, 10))->create([
+                            'shop_id' => $shop->id,
+                            'image' => 'http://localhost:8000/storage/products/images/998mVTmmQItKu32PUwsIxa84eEnAQCtrajFLeMkJ.png'
+                        ])->each(function ($product) {
+                                ProductVariation::factory(rand(3, 6))->create([
+                                    'product_id' => $product->id
+                                ]);
+                            });
                     });
-                });
-        });
+            });
     }
 }

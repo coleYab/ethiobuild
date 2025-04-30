@@ -27,7 +27,7 @@ export default function ProductPage({ products } : {products : any}) {
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
-            currency: "Birr",
+            currency: "ETB",
         }).format(price / 100)
     }
 

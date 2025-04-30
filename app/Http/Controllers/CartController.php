@@ -90,10 +90,12 @@ class CartController extends Controller
         $user = request()->user();
         $user->load('cart');
         $cart = $user->cart;
-        $cart = $cart->load('items');
+        $cart = $cart->loadMissing('items');
         $cart = $cart->items->each(function ($item) {
-            return $item->loadMissing('product');
-        });
+            $item = $item->loadMissing('product');
+            $item = $item->product->loadMissing('product');
+            return $item;
+        }); 
         return Inertia::render('cart/cart', [
             'cart' => $cart
         ]);
