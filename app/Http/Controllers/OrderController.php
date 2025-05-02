@@ -5,13 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use App\Models\Product;
 use App\Models\ProductVariation;
-use Error;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -99,25 +95,22 @@ class OrderController extends Controller
 
             $order = $order->loadMissing('items');
 
-            // redirect them to pay with chapa
             return $order;
         });
 
-        // TODO: the order has been created redirect the user to the payment page
-        return redirect("/order/$response->id/checkout");
+        return Inertia::location("/order/{$response['id']}/checkout");
     }
-
     /**
      * Display the specified resource.
      */
     public function show(Order $order)
     {
         $order = $order->loadMissing('items');
-                $order->items->each(function ($item) {
-                $item = $item->load('product');
-                $item = $item->product->loadMissing('product');
-                return $item;
-            });
+        $order->items->each(function ($item) {
+            $item = $item->load('product');
+            $item = $item->product->loadMissing('product');
+            return $item;
+        });
         return Inertia::render('order/show', [
             'order' => $order
         ]);
@@ -146,7 +139,7 @@ class OrderController extends Controller
         $ref_no = Str::random(10);
         $secret_key = "CHASECK_TEST-nlCF26UGAshYeA3jBqlk5nMMR0xcZI9C";
 
-        $url = "https://itchy-tigers-win.loca.lt/order/complete";
+        $url = "https://ethiobuild.onrender.com";
 
         try {
             // Make the API request using Laravel's HTTP client
@@ -154,20 +147,20 @@ class OrderController extends Controller
                 'Authorization' => 'Bearer ' . $secret_key ,
                 'Content-Type' => 'application/json',
             ])->post('https://api.chapa.co/v1/transaction/initialize', [
-                'amount' => "$order->order_cost",
-                'currency' => 'ETB',
-                'email' => $user->email,
-                'tx_ref' => $ref_no,
-                'callback_url' => $url,
-                'return_url' => "https://itchy-tigers-win.loca.lt" . '/',
-                'customization' => [
-                    'title' => 'Ecommerce',
-                    'description' => 'I love online payments.',
-                ],
-                'meta' => [
-                    'hide_receipt' => false,
-                ],
-            ]);
+                    'amount' => "$order->order_cost",
+                    'currency' => 'ETB',
+                    'email' => $user->email,
+                    'tx_ref' => $ref_no,
+                    'callback_url' => $url,
+                    'return_url' => "https://itchy-tigers-win.loca.lt" . '/',
+                    'customization' => [
+                        'title' => 'Ecommerce',
+                        'description' => 'I love online payments.',
+                    ],
+                    'meta' => [
+                        'hide_receipt' => false,
+                    ],
+                ]);
 
             // Check if the request was successful
             if ($response->successful()) {
