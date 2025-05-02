@@ -58,7 +58,7 @@ export default function TheDashboard({ payload } : { payload : any }) {
     const [activeTab, setActiveTab] = useState("overview")
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen">
             {/* Main Content */}
             <div className="flex flex-1 flex-col">
                 {/* Main Dashboard Content */}
@@ -235,18 +235,21 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                             title: "Find Products",
                                             description: "Find high quality products",
                                             icon: <Search className="h-5 w-5" />,
+                                            link: "/product",
                                             color: "bg-blue-100 text-blue-800",
                                         },
                                         {
                                             title: "Find Suppliers",
                                             description: "Browse verified suppliers",
                                             icon: <Users className="h-5 w-5" />,
+                                            link: "/shop",
                                             color: "bg-purple-100 text-purple-800",
                                         },
                                         {
                                             title: "Support",
                                             description: "Contact our support team",
                                             icon: <Home className="h-5 w-5" />,
+                                            link: "/support",
                                             color: "bg-orange-100 text-orange-800",
                                         },
                                     ].map((action, index) => (
@@ -261,10 +264,12 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                                     <p className="text-sm text-muted-foreground">{action.description}</p>
                                                 </CardContent>
                                                 <CardFooter className="border-t p-3">
-                                                    <Button variant="ghost" size="sm" className="w-full justify-between">
-                                                        <span>Go to {action.title}</span>
-                                                        <ArrowUpRight className="h-4 w-4" />
-                                                    </Button>
+                                                    <Link href={action.link} prefetch>
+                                                        <Button variant="ghost" size="sm" className="w-full justify-between">
+                                                            <span>Go to {action.title}</span>
+                                                            <ArrowUpRight className="h-4 w-4" />
+                                                        </Button>
+                                                    </Link>
                                                 </CardFooter>
                                             </Card>
                                         ))}

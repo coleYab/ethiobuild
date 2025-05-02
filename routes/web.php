@@ -37,7 +37,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $user = request()->user();
         $products = Product::with('variations')->latest()->take(4)->get();
         $orders = Order::latest()->take(5)->get();
-
         return Inertia::render('dashboard', [
             'user' => $user,
             'products' => $products,

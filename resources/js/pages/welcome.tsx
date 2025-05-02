@@ -16,7 +16,7 @@ export default function Welcome() {
                 <header className="mb-6 w-full max-w-[335px] text-sm not-has-[nav]:hidden lg:max-w-4xl">
                     <nav className="flex items-center justify-between gap-4">
                         <div className="flex gap-4">
-                            <h1 className="sm:text-xl md:text-3xl font-bold">EthioBuild</h1>
+                            <h1 className="sm:text-xl md:text-3xl dark:text-white font-bold">EthioBuild</h1>
                         </div>
                         <div className="flex items-center justify-end gap-4">
                         {auth.user ? (
@@ -43,7 +43,7 @@ export default function Welcome() {
                             </>
                         )}
                         </div>
-                    
+
                     </nav>
                 </header>
                 <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
@@ -61,7 +61,7 @@ export default function Welcome() {
                                     <Building2 className="h-6 w-6 text-orange-500" />
                                     <span className="text-xl font-bold">Ethio Build</span>
                                 </div>
-                                <p className="text-gray-600 mb-4">
+                                <p className="text-gray-600 dark:text-white dark:text-white mb-4">
                                     Connecting construction professionals with quality materials at competitive prices.
                                 </p>
                                 {/* <div className="flex gap-4">
@@ -71,7 +71,7 @@ export default function Welcome() {
                                         <a
                                             key={title}
                                             href="#"
-                                            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-orange-500 hover:text-white"
+                                            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600 dark:text-white hover:bg-orange-500 hover:text-white"
                                         >
                                             <span className="sr-only">{social}</span>
                                             <icon className="h-5 w-5" />
@@ -85,7 +85,7 @@ export default function Welcome() {
                                 <ul className="space-y-3">
                                     {["About Us", "Careers", "Press", "Blog", "Contact Us"].map((item) => (
                                         <li key={item}>
-                                            <Link href="#" className="text-gray-600 hover:text-orange-500">
+                                            <Link href="#" className="text-gray-600 dark:text-white hover:text-orange-500">
                                                 {item}
                                             </Link>
                                         </li>
@@ -97,15 +97,15 @@ export default function Welcome() {
 
                         <div className="mt-12 border-t pt-8">
                             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-                                <p className="text-sm text-gray-600">© {new Date().getFullYear()} EthioBuild. All rights reserved.</p>
+                                <p className="text-sm text-gray-600 dark:text-white">© {new Date().getFullYear()} EthioBuild. All rights reserved.</p>
                                 <div className="flex gap-6">
-                                    <Link prefetch href="/rules" className="text-sm text-gray-600 hover:text-orange-500">
+                                    <Link prefetch href="/rules" className="text-sm text-gray-600 dark:text-white  dark:text-white hover:text-orange-500">
                                         Privacy Policy
                                     </Link>
-                                    <Link prefetch href="/rules" className="text-sm text-gray-600 hover:text-orange-500">
+                                    <Link prefetch href="/rules" className="text-sm text-gray-600 dark:text-white dark:text-white hover:text-orange-500">
                                         Terms of Service
                                     </Link>
-                                    <Link prefetch href="/rules" className="text-sm text-gray-600 hover:text-orange-500">
+                                    <Link prefetch href="/rules" className="text-sm text-gray-600 dark:text-white dark:text-white hover:text-orange-500">
                                         Cookie Policy
                                     </Link>
                                 </div>
