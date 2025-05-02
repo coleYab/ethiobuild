@@ -99,13 +99,13 @@ export default function Welcome() {
                             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                                 <p className="text-sm text-gray-600">© {new Date().getFullYear()} EthioBuild. All rights reserved.</p>
                                 <div className="flex gap-6">
-                                    <Link href="#" className="text-sm text-gray-600 hover:text-orange-500">
+                                    <Link prefetch href="/rules" className="text-sm text-gray-600 hover:text-orange-500">
                                         Privacy Policy
                                     </Link>
-                                    <Link href="#" className="text-sm text-gray-600 hover:text-orange-500">
+                                    <Link prefetch href="/rules" className="text-sm text-gray-600 hover:text-orange-500">
                                         Terms of Service
                                     </Link>
-                                    <Link href="#" className="text-sm text-gray-600 hover:text-orange-500">
+                                    <Link prefetch href="/rules" className="text-sm text-gray-600 hover:text-orange-500">
                                         Cookie Policy
                                     </Link>
                                 </div>
