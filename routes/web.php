@@ -4,6 +4,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
+use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -31,7 +33,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('shop/{id}/orders', [ShopController::class, 'orders']);
 
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        // now here comes the last part
+        $user = request()->user();
+        $products = Product::with('variations')->latest()->take(4)->get();
+        $orders = Order::latest()->take(5)->get();
+
+        return Inertia::render('dashboard', [
+            'user' => $user,
+            'products' => $products,
+            'orders' => $orders,
+        ]);
     })->name('dashboard');
 
 });

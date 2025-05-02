@@ -11,12 +11,13 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ user, orders, products} : {user : any, orders: any, products: any }) {
+    const pageData = { user, orders, products }
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full px-4 flex-1 flex-col gap-4 rounded-xl p-4">
-                <TheDashboard />
+                <TheDashboard payload={pageData} />
             </div>
         </AppLayout>
     );
