@@ -38,41 +38,44 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
 
   return (
     <div className="space-y-6">
-          <div className="flex items-center justify-between my-6">
-            <h2 className="text-3xl font-bold tracking-tight">Shop Profile</h2>
-            {auth.user.id == shop.user_id && <>
-              <Link href="/product/create" prefetch>
-              <Button
+      <div className="flex flex-col md:flex-row items-center justify-between my-6 gap-8">
+        <h2 className="text-3xl font-bold tracking-tight">Shop Profile</h2>
+        <div className="flex items-between gap-2">
+        {auth.user.id == shop.user_id && <>
+          <Link href="/product/create" prefetch>
+            <Button
               onClick={isEditing ? handleSave : () => setIsEditing(true)}
               variant="default"
               disabled={processing}
             >
-                  <PlusIcon className="mr-2 h-4 w-4" /> Add Products
+              <PlusIcon className="mr-2 h-4 w-4" /> Add Products
 
             </Button>
-               </Link>
+          </Link>
 
           <Button
-                onClick={isEditing ? handleSave : () => setIsEditing(true)}
-                variant="default"
-                disabled={processing}
-              >
-                {isEditing ? (
-                  <>
-                    <Save className="mr-2 h-4 w-4" /> Save Changes
-                  </>
-                ) : (
-                  <>
-                    <Edit className="mr-2 h-4 w-4" /> Edit Profile
-                  </>
-                )}
-              </Button>
+            onClick={isEditing ? handleSave : () => setIsEditing(true)}
+            variant="default"
+            disabled={processing}
+          >
+            {isEditing ? (
+              <>
+                <Save className="mr-2 h-4 w-4" /> Save Changes
               </>
-              }
-          </div>
+            ) : (
+              <>
+                <Edit className="mr-2 h-4 w-4" /> Edit Profile
+              </>
+            )}
+          </Button>
+        </>
+        }
+
+        </div>
+      </div>
 
       <Tabs defaultValue="profile">
-        <TabsList className="self-center w-2xl gap-4">
+        <TabsList className="self-center w-full md:w-xl gap-4">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
         </TabsList>

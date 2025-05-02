@@ -50,7 +50,9 @@ export default function Welcome() {
                     <ConstructionMarketplace />
                 </div>
 
-                <footer className="border-t py-12 md:py-16">
+                <div className="hidden h-14.5 lg:block"></div>
+            </div>
+                <footer className="border-t py-12 md:px-12 px-4 md:py-16">
                     <div className="container">
                         <div className="flex items-center justify-center w-full">
                         <div className="grid gap-8 md:grid-cols-2">
@@ -111,8 +113,6 @@ export default function Welcome() {
                         </div>
                     </div>
                 </footer>
-                <div className="hidden h-14.5 lg:block"></div>
-            </div>
         </>
     );
 }

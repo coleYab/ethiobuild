@@ -50,63 +50,63 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 } : { cart: any, shippingCost: number, taxRate: number}) {
+export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 }: { cart: any, shippingCost: number, taxRate: number }) {
   const [localCart, setLocalCart] = useState({ items: cart });
 
-    const calculateItemSubtotal = (item: any) => {
-        return item.qty * item.product.price;
-    };
+  const calculateItemSubtotal = (item: any) => {
+    return item.qty * item.product.price;
+  };
 
-    const calculateSubtotal = () => {
-        return localCart.items.reduce((total: number, item: any) => total + calculateItemSubtotal(item), 0);
-    };
+  const calculateSubtotal = () => {
+    return localCart.items.reduce((total: number, item: any) => total + calculateItemSubtotal(item), 0);
+  };
 
-    const calculateTax = () => {
-        return calculateSubtotal() * taxRate;
-    };
+  const calculateTax = () => {
+    return calculateSubtotal() * taxRate;
+  };
 
-    const calculateTotal = () => {
-        return calculateSubtotal() + calculateTax() + shippingCost;
-    };
+  const calculateTotal = () => {
+    return calculateSubtotal() + calculateTax() + shippingCost;
+  };
 
-    const updateQuantity = (itemId: number, newQty:number) => {
-        if (newQty < 1) return;
+  const updateQuantity = (itemId: number, newQty: number) => {
+    if (newQty < 1) return;
 
-        const item = localCart.items.find((item: any) => item.id === itemId);
-        if (newQty > item.product.qty_in_stock) return;
+    const item = localCart.items.find((item: any) => item.id === itemId);
+    if (newQty > item.product.qty_in_stock) return;
 
-        const updatedItems = localCart.items.map((item : any) => {
-            if (item.id === itemId) {
-                return { ...item, qty: newQty };
-            }
-            return item;
-        });
+    const updatedItems = localCart.items.map((item: any) => {
+      if (item.id === itemId) {
+        return { ...item, qty: newQty };
+      }
+      return item;
+    });
 
-        setLocalCart({ ...localCart, items: updatedItems });
-    };
+    setLocalCart({ ...localCart, items: updatedItems });
+  };
 
-    const removeItem = (itemId: number) => {
-        const updatedItems = localCart.items.filter((item : any) => item.id !== itemId);
-        setLocalCart({ ...localCart, items: updatedItems });
-    };
+  const removeItem = (itemId: number) => {
+    const updatedItems = localCart.items.filter((item: any) => item.id !== itemId);
+    setLocalCart({ ...localCart, items: updatedItems });
+  };
 
-    const handleChapaCheckout = () => {
-        // post("/checkout", {
-        //     onSuccess: ({ props }) => {
-        //         // Assuming backend returns a Chapa payment URL
-        //         if (props.paymentUrl) {
-        //             window.location.href = props.paymentUrl;
-        //         } else {
-        //             alert("Redirecting to Chapa payment gateway...");
-        //         }
-        //     },
-        //     onError: () => {
-        //         alert("Checkout failed. Please try again.");
-        //     },
-        // });
-    };
+  const handleChapaCheckout = () => {
+    // post("/checkout", {
+    //     onSuccess: ({ props }) => {
+    //         // Assuming backend returns a Chapa payment URL
+    //         if (props.paymentUrl) {
+    //             window.location.href = props.paymentUrl;
+    //         } else {
+    //             alert("Redirecting to Chapa payment gateway...");
+    //         }
+    //     },
+    //     onError: () => {
+    //         alert("Checkout failed. Please try again.");
+    //     },
+    // });
+  };
 
-    return (
+  return (
     <div className="container mx-auto py-10 px-4 md:px-6">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
@@ -124,9 +124,9 @@ export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 } : { 
                   <p className="text-muted-foreground">Your cart is empty</p>
                 </div>
               ) : (
-                localCart.items.map((item : any) => (
+                localCart.items.map((item: any) => (
                   <div key={item.id} className="grid grid-cols-2 grid-rows-2 md:flex md:flex-row md:items-start justify-center items-center gap-4 py-4">
-                    <div className="bg-muted rounded-md flex items-center justify-center w-16 h-16 shrink-0">
+                    <div className="bg-muted rounded-md flex items-center justify-center mx-6 md:mx-2 w-16 h-16 shrink-0">
                       <img
                         src={item.product.product.image}
                         alt={item.product.name}
@@ -176,7 +176,7 @@ export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 } : { 
               )}
             </CardContent>
           </Card>
-          </div>
+        </div>
         {/* Order Summary */}
         <div className="lg:col-span-1">
           <Card className="sticky top-4">
@@ -214,7 +214,7 @@ export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 } : { 
           </Card>
         </div>
       </div>
-    </div>    
-  // </div>
+    </div>
+    // </div>
   );
 }

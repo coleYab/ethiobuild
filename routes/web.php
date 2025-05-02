@@ -11,6 +11,11 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+Route::get('/rules', function () {
+    return Inertia::render('rules');
+})->name('rules');
+
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('order/{id}/checkout', [OrderController::class, 'checkout' ]);
     Route::post('order/complete', [OrderController::class, 'complete' ]);
