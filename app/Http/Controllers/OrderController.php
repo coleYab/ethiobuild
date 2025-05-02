@@ -152,7 +152,7 @@ class OrderController extends Controller
                     'email' => $user->email,
                     'tx_ref' => $ref_no,
                     'callback_url' => $url,
-                    'return_url' => "https://itchy-tigers-win.loca.lt" . '/',
+                    'return_url' => $url . '/order/me',
                     'customization' => [
                         'title' => 'Ecommerce',
                         'description' => 'I love online payments.',

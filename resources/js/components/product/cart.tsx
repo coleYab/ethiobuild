@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner"
 import { Trash2, MinusCircle, PlusCircle, CreditCard } from "lucide-react";
-
+import { router, usePage } from "@inertiajs/react"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -29,7 +29,7 @@ export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 }: { c
         }
 
         router.post(`/order`, orderPayload, {
-            onSuccess: () => {
+            onSuccess: (order) => {
                 toast("order created successfully");
             },
             onError: (e) => {
@@ -163,7 +163,7 @@ export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 }: { c
                             <Button
                                 className="w-full bg-green-600 hover:bg-green-700 text-white"
                                 size="lg"
-                                onClick={handleChapaCheckout}
+                                onClick={handleCheckout}
                             >
                                 <CreditCard className="mr-2 h-5 w-5" />
                                 Pay with Chapa
