@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SharedData } from "@/types"
+import { toast } from "sonner"
 import { router, usePage } from "@inertiajs/react"
 
 export default function ProductPage({ products } : {products : any}) {
@@ -50,10 +51,11 @@ export default function ProductPage({ products } : {products : any}) {
 
         router.put(`/cart/${cart.id}`, cart, {
             onSuccess: () => {
-                alert("updated the data sucessfully added to cart");
+                toast("updated the data sucessfully added to cart");
+                console.log("updated the data sucessfully added to cart");
             },
             onError: (e) => {
-                alert(JSON.stringify(e))
+                toast("error while adding item to the cart");
             }
         })
     }
