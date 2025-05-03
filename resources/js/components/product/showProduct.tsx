@@ -164,10 +164,17 @@ export default function ProductPage({ products } : {products : any}) {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                        <Button className="flex-1" size="lg" onClick={handleAddToCart}>
-                            <ShoppingCart className="mr-2 h-5 w-5" />
-                            Add to Cart
-                        </Button>
+                        {selectedVariation.qty_in_stock > quantity ? (
+                            <Button className="flex-1" size="lg" onClick={handleAddToCart} >
+                                <ShoppingCart className="mr-2 h-5 w-5" />
+                                Add to Cart
+                            </Button>
+                        ) : (
+                            <Button className="flex-1" size="lg" disabled >
+                                <ShoppingCart className="mr-2 h-5 w-5" />
+                                 Out of stock
+                            </Button>
+                            )}
                         <Button variant="outline" size="lg">
                             <Heart className="mr-2 h-5 w-5" />
                             Add to Wishlist
