@@ -52,7 +52,6 @@ export default function ProductPage({ products } : {products : any}) {
         router.put(`/cart/${cart.id}`, cart, {
             onSuccess: () => {
                 toast("updated the data sucessfully added to cart");
-                console.log("updated the data sucessfully added to cart");
             },
             onError: (e) => {
                 toast("error while adding item to the cart");

@@ -21,7 +21,7 @@ const OrdersTable = ({ orders } : { orders: any[]}) => {
             <TableCell>{order.user_id}</TableCell>
             <TableCell>{new Date(order.order_date).toLocaleString()}</TableCell>
             <TableCell>{order.order_status}</TableCell>
-            <TableCell className="text-right">${order.order_cost}</TableCell>
+            <TableCell className="text-right">ETB {order.order_cost}</TableCell>
             <TableCell>{new Date(order.updated_at).toLocaleString()}</TableCell>
           </TableRow>
         ))}

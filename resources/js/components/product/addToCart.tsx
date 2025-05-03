@@ -1,11 +1,11 @@
 "use client"
 
+import { toast } from "sonner"
 import { useState } from "react"
 import { MinusIcon, PlusIcon, ShoppingCart } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-// import { toast } from "@/hooks/use-toast"
 
 interface Variation {
   id: number
@@ -38,11 +38,7 @@ export default function AddToCartSection({ variations }: AddToCartSectionProps) 
     if (variation && quantity < variation.qty_in_stock) {
       setQuantity(quantity + 1)
     } else {
-    //   toast({
-    //     title: "Maximum stock reached",
-    //     description: "You've reached the maximum available stock for this variation.",
-    //     variant: "destructive",
-    //   })
+     toast("maximum quantity reached")
     }
   }
 

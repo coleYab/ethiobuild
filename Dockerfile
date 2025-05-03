@@ -29,6 +29,6 @@ RUN npm run build
 EXPOSE 8000
 
 # Start Laravel development server
-CMD php artisan migrate:seed --fresh
+CMD php artisan migrate:fresh
 CMD php artisan serve --host=0.0.0.0 --port=8000
 

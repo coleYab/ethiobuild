@@ -66,10 +66,9 @@ export default function CreateProductForm({ product, shop_id }: {product: any, s
             return;
         }
 
-        console.log("posting: ", data)
         post("/product", {
             onError: (e) => {
-                console.log(`error happend ${JSON.stringify(e)}`)
+                toast("unable to create a product");
             }
         })
     }

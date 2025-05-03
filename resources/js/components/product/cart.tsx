@@ -97,7 +97,7 @@ export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 }: { c
                                             <div className="flex-1 min-w-0">
                                                 <h3 className="font-medium truncate">{item.product.name}</h3>
                                                 <p className="text-sm text-muted-foreground">SKU: {item.product.sku}</p>
-                                                <p className="text-sm">Price: ${item.product.price.toFixed(2)}</p>
+                                                <p className="text-sm">Price: {item.product.price.toFixed(2)}</p>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Button
@@ -147,16 +147,16 @@ export default function Checkout({ cart, shippingCost = 0, taxRate = 0.15 }: { c
                         <CardContent className="space-y-4">
                             <div className="flex justify-between">
                                 <span>Subtotal</span>
-                                <span>${calculateSubtotal().toFixed(2)}</span>
+                                <span>{calculateSubtotal().toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Tax (15%)</span>
-                                <span>${calculateTax().toFixed(2)}</span>
+                                <span>{calculateTax().toFixed(2)}</span>
                             </div>
                             <Separator />
                             <div className="flex justify-between font-bold text-lg">
                                 <span>Total</span>
-                                <span>${calculateTotal().toFixed(2)}</span>
+                                <span>{calculateTotal().toFixed(2)}</span>
                             </div>
                         </CardContent>
                         <CardFooter className="flex flex-col gap-4">

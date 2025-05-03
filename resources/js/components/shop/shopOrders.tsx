@@ -163,7 +163,7 @@ export default function OrdersPage({ orders } : { orders : any }) {
                       <TableCell>
                         <Badge className={getStatusColor(order.order_status)}>{order.order_status}</Badge>
                       </TableCell>
-                      <TableCell className="text-right">${(order.order_cost / 100).toFixed(2)}</TableCell>
+                      <TableCell className="text-right"> ETB {order.order_cost}</TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -176,7 +176,7 @@ export default function OrdersPage({ orders } : { orders : any }) {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem>
                               <Link className="flex" href={`/order/${order.id}`} prefetch>
-                                <Eye className="mr-2 h-4 w-4" /> View Details                              
+                                <Eye className="mr-2 h-4 w-4" /> View Details
                               </Link>
                             </DropdownMenuItem>
                             {/* <DropdownMenuSeparator /> */}

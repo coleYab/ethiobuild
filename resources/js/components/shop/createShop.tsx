@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { toast } from "sonner"
 import { useForm, router, usePage } from "@inertiajs/react"
 import { Building2, Mail, Phone, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -52,10 +53,9 @@ export default function CreateShopForm() {
   // Handle form submission
   const onSubmit = (e: any) => {
     e.preventDefault()
-    console.log(data)
     post("/shop", {
       onError: (e) => {
-        console.log(JSON.stringify(e))
+        toast("unable to create a shop");
       }
     })
   }

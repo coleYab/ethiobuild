@@ -34,8 +34,6 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
     });
   };
 
-  console.log(shop)
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-center justify-between my-6 gap-8">

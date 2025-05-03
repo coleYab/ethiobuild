@@ -52,7 +52,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 export default function TheDashboard({ payload } : { payload : any }) {
-    console.log(payload)
     const orders = payload.orders;
     const products = payload.products;
     const [activeTab, setActiveTab] = useState("overview")
@@ -145,28 +144,28 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                                     { orders?.length ? orders.map((order) => (
                                                         <TableRow key={order.id}>
                                                             <TableCell className="font-medium">{order.id}</TableCell>
-                                                            <TableCell>{order.date}</TableCell>
+                                                            <TableCell>{order.order_date}</TableCell>
                                                             <TableCell>
                                                                 <Badge
                                                                     variant={
-                                                                        order.status === "Processing"
+                                                                        order.order_status === "Created" || order.order_status === "created"
                                                                             ? "outline"
-                                                                            : order.status === "Shipped"
+                                                                            :order.order_status === "Completed" || order.order_status === "completed"
                                                                                 ? "secondary"
                                                                                 : "default"
                                                                     }
                                                                     className={
-                                                                        order.status === "Delivered"
+                                                                        order.order_status === "completed" || order.order_status === "Completed"
                                                                             ? "bg-green-100 text-green-800 hover:bg-green-100"
-                                                                            : order.status === "Shipped"
+                                                                            :order.order_status === "Created" || order.order_status === "created"
                                                                                 ? "bg-blue-100 text-blue-800 hover:bg-blue-100"
                                                                                 : "bg-orange-100 text-orange-800 hover:bg-orange-100"
                                                                     }
                                                                 >
-                                                                    {order.status}
+                                                                    {order.order_status}
                                                                 </Badge>
                                                             </TableCell>
-                                                            <TableCell className="text-right">{order.amount}</TableCell>
+                                                            <TableCell className="text-right">ETB {order.order_cost}</TableCell>
                                                         </TableRow>
                                                     )) :
 
