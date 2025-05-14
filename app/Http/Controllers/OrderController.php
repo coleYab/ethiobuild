@@ -74,13 +74,13 @@ class OrderController extends Controller
                 $total_amount += $product['price'] * $order_item['qty'];
             }
 
-            $response['amount'] = $total_amount;
+            $response['amount'] = $total_amount + $total_amount * 0.15;
             $response['message'] = "Order created successfully";
 
             $order = Order::create([
                 'user_id' => $user->id,
                 'order_status' => 'created',
-                'order_cost' => $total_amount,
+                'order_cost' => $total_amount + $total_amount * 0.15,
             ]);
 
             foreach ($request['items'] as $order_item) {
@@ -140,6 +140,8 @@ class OrderController extends Controller
         $secret_key = "CHASECK_TEST-nlCF26UGAshYeA3jBqlk5nMMR0xcZI9C";
 
         $url = "https://ethiobuild.onrender.com";
+
+        $order->order_cost = min(100000-1, $order->order_cost);
 
         try {
             // Make the API request using Laravel's HTTP client

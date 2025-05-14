@@ -9,7 +9,7 @@ import { SharedData } from "@/types"
 import { toast } from "sonner"
 import { router, usePage } from "@inertiajs/react"
 
-export default function ProductPage({ products } : {products : any}) {
+export default function ProductPage({ products }: { products: any }) {
     const { auth } = usePage<SharedData>().props;
     const user = auth.user;
     const product = products;
@@ -29,14 +29,14 @@ export default function ProductPage({ products } : {products : any}) {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "ETB",
-        }).format(price / 100)
+        }).format(price)
     }
 
     const handleAddToCart = () => {
-        const cart : any = user.cart;
+        const cart: any = user.cart;
         let val = false;
-        const newItem = {product_id: selectedVariation.id, qty : quantity }
-        for (let i = 0; i < cart.items.length; i+=1) {
+        const newItem = { product_id: selectedVariation.id, qty: quantity }
+        for (let i = 0; i < cart.items.length; i += 1) {
             if (cart.items[i].product_id == newItem.product_id) {
                 cart.items[i].qty += newItem.qty;
                 val = true;
@@ -73,7 +73,7 @@ export default function ProductPage({ products } : {products : any}) {
                     </div>
 
                     <div className="grid grid-cols-3 gap-2">
-                        {product.variations.map((variation : any, index: number) => (
+                        {product.variations.map((variation: any, index: number) => (
                             <div
                                 key={variation.id}
                                 className={`relative aspect-square cursor-pointer overflow-hidden rounded-md border ${activeImage === index ? "ring-2 ring-primary" : ""}`}
@@ -97,7 +97,7 @@ export default function ProductPage({ products } : {products : any}) {
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">{product.name}</h1>
                         <div className="flex items-center justify-between mt-2">
-                            <p className="text-2xl font-semibold text-primary">{formatPrice(selectedVariation.price)}</p>
+                            <p className="text-2xl font-semibold text-primary">ETB {selectedVariation.price}</p>
                             <Badge variant="outline" className="text-sm">
                                 {selectedVariation.qty_in_stock > 100
                                     ? "In Stock"
@@ -116,7 +116,7 @@ export default function ProductPage({ products } : {products : any}) {
                             <Tabs
                                 defaultValue={selectedVariation.id.toString()}
                                 onValueChange={(value) => {
-                                    const variation = product.variations.find((v : any) => v.id.toString() === value)
+                                    const variation = product.variations.find((v: any) => v.id.toString() === value)
                                     if (variation) {
                                         setSelectedVariation(variation)
                                         setActiveImage(product.variations.indexOf(variation))
@@ -124,7 +124,7 @@ export default function ProductPage({ products } : {products : any}) {
                                 }}
                             >
                                 <TabsList className="flex flex-wrap gap-3 h-auto">
-                                    {product.variations.map((variation : any, index : number) => (
+                                    {product.variations.map((variation: any, index: number) => (
                                         <TabsTrigger
                                             key={variation.id}
                                             value={variation.id.toString()}
@@ -172,9 +172,9 @@ export default function ProductPage({ products } : {products : any}) {
                         ) : (
                             <Button className="flex-1" size="lg" disabled >
                                 <ShoppingCart className="mr-2 h-5 w-5" />
-                                 Out of stock
+                                Out of stock
                             </Button>
-                            )}
+                        )}
                         <Button variant="outline" size="lg">
                             <Heart className="mr-2 h-5 w-5" />
                             Add to Wishlist

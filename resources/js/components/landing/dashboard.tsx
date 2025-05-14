@@ -51,7 +51,7 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-export default function TheDashboard({ payload } : { payload : any }) {
+export default function TheDashboard({ payload }: { payload: any }) {
     const orders = payload.orders;
     const products = payload.products;
     const [activeTab, setActiveTab] = useState("overview")
@@ -66,7 +66,7 @@ export default function TheDashboard({ payload } : { payload : any }) {
                         {/* Page Header */}
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-                            <div className="flex items-center gap-2">
+                            {/* <div className="flex items-center gap-2">
                                 <Button variant="outline" size="sm">
                                     <FileText className="mr-2 h-4 w-4" />
                                     Download Reports
@@ -78,12 +78,12 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                     <ShoppingCart className="mr-2 h-4 w-4" />
                                     New Order
                                 </Button>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Dashboard Tabs */}
                         <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                            <TabsList>
+                            <TabsList className="hidden">
                                 <TabsTrigger value="overview">Overview</TabsTrigger>
                             </TabsList>
 
@@ -141,7 +141,7 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                                     </TableRow>
                                                 </TableHeader>
                                                 <TableBody>
-                                                    { orders?.length ? orders.map((order) => (
+                                                    {orders?.length ? orders.map((order) => (
                                                         <TableRow key={order.id}>
                                                             <TableCell className="font-medium">{order.id}</TableCell>
                                                             <TableCell>{order.order_date}</TableCell>
@@ -150,14 +150,14 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                                                     variant={
                                                                         order.order_status === "Created" || order.order_status === "created"
                                                                             ? "outline"
-                                                                            :order.order_status === "Completed" || order.order_status === "completed"
+                                                                            : order.order_status === "Completed" || order.order_status === "completed"
                                                                                 ? "secondary"
                                                                                 : "default"
                                                                     }
                                                                     className={
                                                                         order.order_status === "completed" || order.order_status === "Completed"
                                                                             ? "bg-green-100 text-green-800 hover:bg-green-100"
-                                                                            :order.order_status === "Created" || order.order_status === "created"
+                                                                            : order.order_status === "Created" || order.order_status === "created"
                                                                                 ? "bg-blue-100 text-blue-800 hover:bg-blue-100"
                                                                                 : "bg-orange-100 text-orange-800 hover:bg-orange-100"
                                                                     }
@@ -169,7 +169,7 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                                         </TableRow>
                                                     )) :
 
-                                                        <div className="w-full h-full flex m-5 items-center justify-center">No Orders. Please make at least one order.</div>                            }
+                                                        <div className="w-full h-full flex m-5 items-center justify-center">No Orders. Please make at least one order.</div>}
                                                 </TableBody>
                                             </Table>
                                         </CardContent>
@@ -191,31 +191,35 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                                            {products.map((product, index) => (
-                                                <div key={index} className="group relative overflow-hidden rounded-lg border">
-                                                    <div className="aspect-square overflow-hidden">
-                                                        <img
-                                                            src={product.image || "/placeholder.svg"}
-                                                            alt={product.name}
-                                                            width={200}
-                                                            height={200}
-                                                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                                                        />
-                                                    </div>
-                                                    <div className="p-4">
-                                                        <h3 className="font-medium">{product.name}</h3>
-                                                        <p className="text-sm text-muted-foreground">{product.supplier}</p>
-                                                        <div className="mt-2 flex items-center justify-between">
-                                                            <span className="font-bold">ETB {product.variations[0].price}</span>
-                                                            <Link href={`/product/${product.id}`}>
-                                                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                                                                    <ShoppingCart className="h-4 w-4" />
-                                                                </Button>
-                                                            </Link>
+                                            {products?.length ?
+                                                products.map((product, index) => (
+                                                    <div key={index} className="group relative overflow-hidden rounded-lg border">
+                                                        <div className="aspect-square overflow-hidden">
+                                                            <img
+                                                                src={product.image || "/placeholder.svg"}
+                                                                alt={product.name}
+                                                                width={200}
+                                                                height={200}
+                                                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                                            />
+                                                        </div>
+                                                        <div className="p-4">
+                                                            <h3 className="font-medium">{product.name}</h3>
+                                                            <p className="text-sm text-muted-foreground">{product.supplier}</p>
+                                                            <div className="mt-2 flex items-center justify-between">
+                                                                <span className="font-bold">ETB {product.variations[0].price}</span>
+                                                                <Link href={`/product/${product.id}`}>
+                                                                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                                                                        <ShoppingCart className="h-4 w-4" />
+                                                                    </Button>
+                                                                </Link>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                )) : (
+                                                    <span>please at least create one product</span>
+                                                )
+                                            }
                                         </div>
                                     </CardContent>
                                     <CardFooter>
@@ -252,26 +256,26 @@ export default function TheDashboard({ payload } : { payload : any }) {
                                             color: "bg-orange-100 text-orange-800",
                                         },
                                     ].map((action, index) => (
-                                            <Card key={index} className="overflow-hidden">
-                                                <CardHeader className={`${action.color} py-3`}>
-                                                    <div className="flex items-center gap-2">
-                                                        {action.icon}
-                                                        <CardTitle className="text-base">{action.title}</CardTitle>
-                                                    </div>
-                                                </CardHeader>
-                                                <CardContent className="p-4">
-                                                    <p className="text-sm text-muted-foreground">{action.description}</p>
-                                                </CardContent>
-                                                <CardFooter className="border-t p-3">
-                                                    <Link href={action.link} prefetch>
-                                                        <Button variant="ghost" size="sm" className="w-full justify-between">
-                                                            <span>Go to {action.title}</span>
-                                                            <ArrowUpRight className="h-4 w-4" />
-                                                        </Button>
-                                                    </Link>
-                                                </CardFooter>
-                                            </Card>
-                                        ))}
+                                        <Card key={index} className="overflow-hidden">
+                                            <CardHeader className={`${action.color} py-3`}>
+                                                <div className="flex items-center gap-2">
+                                                    {action.icon}
+                                                    <CardTitle className="text-base">{action.title}</CardTitle>
+                                                </div>
+                                            </CardHeader>
+                                            <CardContent className="p-4">
+                                                <p className="text-sm text-muted-foreground">{action.description}</p>
+                                            </CardContent>
+                                            <CardFooter className="border-t p-3">
+                                                <Link href={action.link} prefetch>
+                                                    <Button variant="ghost" size="sm" className="w-full justify-between">
+                                                        <span>Go to {action.title}</span>
+                                                        <ArrowUpRight className="h-4 w-4" />
+                                                    </Button>
+                                                </Link>
+                                            </CardFooter>
+                                        </Card>
+                                    ))}
                                 </div>
                             </TabsContent>
                         </Tabs>

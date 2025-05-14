@@ -10,7 +10,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 
-export default function OrderDetails({ order } : { order : any }) {
+export default function OrderDetails({ order }: { order: any }) {
   return (
     <>
       <Head title={`Order #${order.id}`} />
@@ -26,14 +26,14 @@ export default function OrderDetails({ order } : { order : any }) {
           <CardContent>
             <div className="mb-4">
               <p><strong>Status:</strong> <Badge variant="outline">{order.order_status}</Badge></p>
-              <p><strong>Total Cost:</strong> ₹{order.order_cost}</p>
+              <p><strong>Total Cost:</strong> ETB {order.order_cost}</p>
             </div>
 
             <Separator className="my-4" />
 
             <h3 className="text-lg font-semibold mb-2">Items</h3>
             <div className="space-y-6">
-              {order.items.map((item : any) => (
+              {order.items.map((item: any) => (
                 <Card key={item.id} className="border bg-muted/50">
                   <CardHeader>
                     <CardTitle>{item.product.product.name}</CardTitle>
@@ -41,8 +41,8 @@ export default function OrderDetails({ order } : { order : any }) {
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <p><strong>Quantity:</strong> {item.qty}</p>
-                    <p><strong>Price per unit:</strong> ₹{item.price}</p>
-                    <p><strong>Subtotal:</strong> ₹{item.qty * item.price}</p>
+                    <p><strong>Price per unit:</strong> ETB {item.price}</p>
+                    <p><strong>Subtotal:</strong> ETB {item.qty * item.price}</p>
 
                     <Separator />
 
