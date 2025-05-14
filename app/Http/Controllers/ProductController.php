@@ -27,7 +27,10 @@ class ProductController extends Controller
      * Show the form for creating a new resource.
      */
     public function create() {
-        return Inertia::render('product/create');
+        $shop_id = request()->query('shop');
+        return Inertia::render('product/create', [
+            'shop_id' => $shop_id
+        ]);
     }
 
     /**

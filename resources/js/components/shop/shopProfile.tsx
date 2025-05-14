@@ -12,6 +12,8 @@ import ProductsList from "../product/productList";
 
 export default function ShopProfilePage({ shop }: { shop: any }) {
   const { auth } = usePage<SharedData>().props
+  const props = usePage<SharedData>().props
+  console.log(props)
 
   const [isEditing, setIsEditing] = useState(false);
   const { data, setData, patch, processing } = useForm({
@@ -34,40 +36,41 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
     });
   };
 
+  // alert(shop_id)
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-center justify-between my-6 gap-8">
         <h2 className="text-3xl font-bold tracking-tight">Shop Profile</h2>
         <div className="flex items-between gap-2">
-        {auth.user.id == shop.user_id && <>
-          <Link href="/product/create" prefetch>
+          {auth.user.id == shop.user_id && <>
+            <Link href={route("product.create", { shop: shop.id })} prefetch>
+              <Button
+                onClick={isEditing ? handleSave : () => setIsEditing(true)}
+                variant="default"
+                disabled={processing}
+              >
+                <PlusIcon className="mr-2 h-4 w-4" /> Add Products
+
+              </Button>
+            </Link>
+
             <Button
               onClick={isEditing ? handleSave : () => setIsEditing(true)}
               variant="default"
               disabled={processing}
             >
-              <PlusIcon className="mr-2 h-4 w-4" /> Add Products
-
+              {isEditing ? (
+                <>
+                  <Save className="mr-2 h-4 w-4" /> Save Changes
+                </>
+              ) : (
+                <>
+                  <Edit className="mr-2 h-4 w-4" /> Edit Profile
+                </>
+              )}
             </Button>
-          </Link>
-
-          <Button
-            onClick={isEditing ? handleSave : () => setIsEditing(true)}
-            variant="default"
-            disabled={processing}
-          >
-            {isEditing ? (
-              <>
-                <Save className="mr-2 h-4 w-4" /> Save Changes
-              </>
-            ) : (
-              <>
-                <Edit className="mr-2 h-4 w-4" /> Edit Profile
-              </>
-            )}
-          </Button>
-        </>
-        }
+          </>
+          }
 
         </div>
       </div>
