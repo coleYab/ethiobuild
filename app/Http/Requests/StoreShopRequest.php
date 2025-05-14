@@ -25,11 +25,11 @@ class StoreShopRequest extends FormRequest
             "name" => ['required', 'string'],
             "address" => ['required', 'string'],
             "user_id" => ['required', 'integer'],
-            "image" => ['required', 'image'],
-            "cover_image" => ['required', 'image'],
+            "image" => ['required', 'string'],
+            "cover_image" => ['required', 'string'],
             "email" => ['required', 'string'],
             "phone" => ['required', 'string'],
-            "logo" => ['required', 'image'],
+            "logo" => ['required', 'string'],
             "description" => ['required', 'string'],
         ];
     }

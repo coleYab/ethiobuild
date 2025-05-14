@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { toast } from "sonner"
 import { useForm, router, usePage } from "@inertiajs/react"
-import { Building2, Mail, Phone, Upload } from "lucide-react"
+import { Building2, Mail, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -16,37 +16,29 @@ const defaultValues = {
   email: "",
   phone: "",
   description: "",
-  image: null,
-  cover_image: null,
-  logo: null,
+  image: "",
+  cover_image: "",
+  logo: "",
   user_id: 0,
 }
 
 export default function CreateShopForm() {
   const { auth } = usePage<SharedData>().props;
-  const [imagePreview, setImagePreview] = useState<any>("image")
-  const [coverImagePreview, setCoverImagePreview] = useState<any>("image")
-  const [logoPreview, setLogoPreview] = useState<any>("image")
+  const [imagePreview, setImagePreview] = useState<any>("");
+  const [coverImagePreview, setCoverImagePreview] = useState<any>("");
+  const [logoPreview, setLogoPreview] = useState<any>("");
   defaultValues.user_id = auth.user.id;
-
 
   const { data, setData, post, processing, errors } = useForm(defaultValues)
 
-  const handleImageChange = (e: any, imageType: ImageType) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        if (imageType === "image") {
-          setImagePreview(reader.result)
-        } else if (imageType === "cover_image") {
-          setCoverImagePreview(reader.result)
-        } else if (imageType === "logo") {
-          setLogoPreview(reader.result)
-        }
-      }
-      reader.readAsDataURL(file)
-      setData(imageType, file)
+  const handleImageUrlChange = (url: string, imageType: ImageType) => {
+    setData(imageType, url)
+    if (imageType === "image") {
+      setImagePreview(url)
+    } else if (imageType === "cover_image") {
+      setCoverImagePreview(url)
+    } else if (imageType === "logo") {
+      setLogoPreview(url)
     }
   }
 
@@ -151,43 +143,42 @@ export default function CreateShopForm() {
       <Card>
         <CardHeader>
           <CardTitle>Shop Images</CardTitle>
-          <CardDescription>Upload images for your shop profile.</CardDescription>
+          <CardDescription>Enter URLs for your shop profile images.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Shop Logo</label>
+            <label className="block text-sm font-medium text-gray-700">Shop Logo URL</label>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <div
-                  className={`relative flex h-32 w-32 cursor-pointer flex-col items-center justify-center rounded-full border border-dashed border-gray-300 bg-gray-50 text-center hover:bg-gray-100 ${
-                    logoPreview ? "p-0" : "p-8"
-                  }`}
-                  onClick={() => document.getElementById("shop-logo")?.click()}
+                  className={`relative flex h-32 w-32 flex-col items-center justify-center rounded-full border border-dashed border-gray-300 bg-gray-50 text-center hover:bg-gray-100 ${logoPreview ? "p-0" : "p-8"
+                    }`}
                 >
                   {logoPreview ? (
                     <img
-                      src={logoPreview || "/placeholder.svg"}
+                      src={logoPreview}
                       alt="Logo preview"
                       className="h-full w-full rounded-full object-cover"
+                      onError={() => setLogoPreview("")}
                     />
                   ) : (
-                    <>
-                      <Upload className="h-6 w-6 text-gray-500" />
-                      <p className="mt-1 text-xs text-gray-500">Upload Logo</p>
-                    </>
+                    <p className="text-xs text-gray-500">Enter logo URL</p>
                   )}
-                  <input
-                    id="shop-logo"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleImageChange(e, "logo")}
-                  />
                 </div>
-                <div className="text-sm text-gray-500">
-                  <p>Your shop logo</p>
-                  <p>Recommended: Square image, 512x512px</p>
-                  <p>This will appear on your shop profile and receipts</p>
+                <div className="w-full sm:w-auto">
+                  <Input
+                    id="shop-logo-url"
+                    type="url"
+                    placeholder="https://example.com/logo.jpg"
+                    value={data.logo}
+                    onChange={(e) => handleImageUrlChange(e.target.value, "logo")}
+                    className={errors.logo ? "border-red-500" : ""}
+                  />
+                  <div className="mt-2 text-sm text-gray-500">
+                    <p>Your shop logo</p>
+                    <p>Recommended: Square image, 512x512px</p>
+                    <p>This will appear on your shop profile and receipts</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -195,76 +186,75 @@ export default function CreateShopForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Cover Image</label>
+            <label className="block text-sm font-medium text-gray-700">Cover Image URL</label>
             <div className="grid w-full items-center gap-4">
-              <div
-                className={`relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-center hover:bg-gray-100 ${
-                  coverImagePreview ? "p-0" : "p-12"
-                }`}
-                onClick={() => document.getElementById("shop-cover-image")?.click()}
-              >
-                {coverImagePreview ? (
-                  <img
-                    src={coverImagePreview || "/placeholder.svg"}
-                    alt="Cover image preview"
-                    className="h-full w-full rounded-md object-cover"
+              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <div
+                  className={`relative flex h-40 w-full flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-center hover:bg-gray-100 ${coverImagePreview ? "p-0" : "p-12"
+                    }`}
+                >
+                  {coverImagePreview ? (
+                    <img
+                      src={coverImagePreview}
+                      alt="Cover image preview"
+                      className="h-full w-full rounded-md object-cover"
+                      onError={() => setCoverImagePreview("")}
+                    />
+                  ) : (
+                    <p className="text-sm text-gray-500">Enter cover image URL</p>
+                  )}
+                </div>
+                <div className="w-full">
+                  <Input
+                    id="shop-cover-image-url"
+                    type="url"
+                    placeholder="https://example.com/cover.jpg"
+                    value={data.cover_image}
+                    onChange={(e) => handleImageUrlChange(e.target.value, "cover_image")}
+                    className={errors.cover_image ? "border-red-500" : ""}
                   />
-                ) : (
-                  <>
-                    <Upload className="h-8 w-8 text-gray-500" />
-                    <p className="mt-2 text-sm text-gray-500">Upload Cover Image</p>
-                    <p className="text-xs text-gray-400">Banner image for your shop profile</p>
-                  </>
-                )}
-                <input
-                  id="shop-cover-image"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleImageChange(e, "cover_image")}
-                />
+                  <p className="mt-2 text-sm text-gray-500">
+                    Recommended: Wide image (1200x300px). This will appear at the top of your shop profile.
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-gray-500">
-                Recommended: Wide image (1200x300px). This will appear at the top of your shop profile.
-              </p>
             </div>
             {errors.cover_image && <p className="mt-1 text-sm text-red-600">{errors.cover_image}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Shop Image</label>
+            <label className="block text-sm font-medium text-gray-700">Shop Image URL</label>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <div
-                  className={`relative flex h-40 w-40 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-center hover:bg-gray-100 ${
-                    imagePreview ? "p-0" : "p-12"
-                  }`}
-                  onClick={() => document.getElementById("shop-image")?.click()}
+                  className={`relative flex h-40 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-center hover:bg-gray-100 ${imagePreview ? "p-0" : "p-12"
+                    }`}
                 >
                   {imagePreview ? (
                     <img
-                      src={imagePreview || "/placeholder.svg"}
+                      src={imagePreview}
                       alt="Shop image preview"
                       className="h-full w-full rounded-md object-cover"
+                      onError={() => setImagePreview("")}
                     />
                   ) : (
-                    <>
-                      <Upload className="h-8 w-8 text-gray-500" />
-                      <p className="mt-2 text-sm text-gray-500">Upload Shop Image</p>
-                    </>
+                    <p className="text-sm text-gray-500">Enter shop image URL</p>
                   )}
-                  <input
-                    id="shop-image"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleImageChange(e, "image")}
-                  />
                 </div>
-                <div className="text-sm text-gray-500">
-                  <p>Main shop image</p>
-                  <p>Recommended: Square image, 800x800px</p>
-                  <p>This will appear in search results and shop listings</p>
+                <div className="w-full sm:w-auto">
+                  <Input
+                    id="shop-image-url"
+                    type="url"
+                    placeholder="https://example.com/image.jpg"
+                    value={data.image}
+                    onChange={(e) => handleImageUrlChange(e.target.value, "image")}
+                    className={errors.image ? "border-red-500" : ""}
+                  />
+                  <div className="mt-2 text-sm text-gray-500">
+                    <p>Main shop image</p>
+                    <p>Recommended: Square image, 800x800px</p>
+                    <p>This will appear in search results and shop listings</p>
+                  </div>
                 </div>
               </div>
             </div>

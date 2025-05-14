@@ -39,9 +39,9 @@ class ProductController extends Controller
         $request = $request->validated();
 
         // upload images
-        if ($or->hasFile('image')) {
-            $request['image'] = Storage::url($or->file('image')->store('products/images', 'public'));
-        }
+        // if ($or->hasFile('image')) {
+        //     $request['image'] = Storage::url($or->file('image')->store('products/images', 'public'));
+        // }
 
         $product = DB::transaction( function() use ($request) {
             $product = Product::create([

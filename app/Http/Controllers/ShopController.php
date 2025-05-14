@@ -37,17 +37,17 @@ class ShopController extends Controller
     {
         $validatedData = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $validatedData['image'] = Storage::url($request->file('image')->store('shops/images', 'public'));
-        }
+        // if ($request->hasFile('image')) {
+        //     $validatedData['image'] = Storage::url($request->file('image')->store('shops/images', 'public'));
+        // }
 
-        if ($request->hasFile('cover_image')) {
-            $validatedData['cover_image'] = Storage::url($request->file('cover_image')->store('shops/images', 'public'));
-        }
+        // if ($request->hasFile('cover_image')) {
+        //     $validatedData['cover_image'] = Storage::url($request->file('cover_image')->store('shops/images', 'public'));
+        // }
 
-        if ($request->hasFile('logo')) {
-            $validatedData['logo'] = Storage::url($request->file('logo')->store('shops/logos', 'public'));
-        }
+        // if ($request->hasFile('logo')) {
+        //     $validatedData['logo'] = Storage::url($request->file('logo')->store('shops/logos', 'public'));
+        // }
 
         $shop = Shop::create($validatedData);
 

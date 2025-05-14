@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Edit, Plus, PlusIcon, Trash2, Upload } from "lucide-react"
+import { Edit, Plus, PlusIcon, Trash2 } from "lucide-react"
 import { useForm, usePage } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,14 +8,14 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 
 let defaultValues = {
-  name: "",
-  shop_id: 1,
-  description: "",
-  image: "thisis image",
-  variations: [{ name: "", sku: "", price: 0, qty_in_stock: 0 }],
+    name: "",
+    shop_id: 1,
+    description: "",
+    image: "",
+    variations: [{ name: "", sku: "", price: 0, qty_in_stock: 0 }],
 }
 
-export default function CreateProductForm({ product, shop_id }: {product: any, shop_id: any}) {
+export default function CreateProductForm({ product, shop_id }: { product: any, shop_id: any }) {
     const [imagePreview, setImagePreview] = useState<any>(null);
     const { errors } = usePage().props
     if (shop_id) {
@@ -44,17 +44,11 @@ export default function CreateProductForm({ product, shop_id }: {product: any, s
         }
     }
 
-    // Handle image change
-    const handleImageChange = (e: any) => {
-        const file = e.target.files?.[0]
-        if (file) {
-            setData("image", file)
-            const reader = new FileReader()
-            reader.onloadend = () => {
-                setImagePreview(reader.result)
-            }
-            reader.readAsDataURL(file)
-        }
+    // Handle image URL change
+    const handleImageUrlChange = (e: any) => {
+        const url = e.target.value
+        setData("image", url)
+        setImagePreview(url)
     }
 
     // Handle form submission
@@ -118,47 +112,47 @@ export default function CreateProductForm({ product, shop_id }: {product: any, s
                     </div>
 
                     <div>
-                        <label htmlFor="product-image" className="block text-sm font-medium">
-                            Product Image
+                        <label htmlFor="product-image-url" className="block text-sm font-medium">
+                            Product Image URL
                         </label>
                         <div className="grid w-full items-center gap-4">
                             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                                 <div
-                                    className={`relative flex h-40 w-40 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-center hover:bg-gray-100 ${
-imagePreview ? "p-0" : "p-12"
-}`}
-                                    onClick={() => document.getElementById("product-image")?.click()}
+                                    className={`relative flex h-40 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-center hover:bg-gray-100 ${imagePreview ? "p-0" : "p-12"
+                                        }`}
                                 >
                                     {imagePreview ? (
                                         <img
                                             src={imagePreview}
                                             alt="Product preview"
                                             className="h-full w-full rounded-md object-cover"
+                                            onError={() => setImagePreview(null)}
                                         />
                                     ) : (
-                                            <>
-                                                <Upload className="h-8 w-8 text-gray-500" />
-                                                <p className="mt-2 text-sm text-gray-500">Click to upload</p>
-                                            </>
-                                        )}
-                                    <input
-                                        id="product-image"
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={handleImageChange}
-                                    />
+                                        <>
+                                            <p className="mt-2 text-sm text-gray-500">Enter image URL</p>
+                                        </>
+                                    )}
                                 </div>
-                                <div className="text-sm text-gray-500">
-                                    <p>Recommended size: 1000x1000px</p>
-                                    <p>Max file size: 5MB</p>
-                                    <p>Supported formats: JPEG, PNG</p>
+                                <div className="w-full sm:w-auto">
+                                    <Input
+                                        id="product-image-url"
+                                        type="url"
+                                        placeholder="https://example.com/image.jpg"
+                                        value={data.image}
+                                        onChange={handleImageUrlChange}
+                                        className={errors.image ? "border-red-500" : ""}
+                                    />
+                                    <div className="mt-2 text-sm text-gray-500">
+                                        <p>Recommended size: 1000x1000px</p>
+                                        <p>Supported formats: JPEG, PNG</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         {errors.image && <p className="mt-1 text-sm text-red-500">{errors.image}</p>}
                         <p className="mt-1 text-sm text-gray-500">
-                            Upload a high-quality image of your product.
+                            Enter the URL of a high-quality image of your product.
                         </p>
                     </div>
                 </CardContent>
@@ -315,8 +309,8 @@ imagePreview ? "p-0" : "p-12"
                         Cancel
                     </Button>
                     <Button type="submit" disabled={processing}>
-                        {product && !processing ? <Edit /> : !processing && <PlusIcon /> }
-                        { !product ? processing ? "Creating..." : "Create Product" : processing ? "Editing..." : "Edit Product" }
+                        {product && !processing ? <Edit /> : !processing && <PlusIcon />}
+                        {!product ? processing ? "Creating..." : "Create Product" : processing ? "Editing..." : "Edit Product"}
                     </Button>
                 </CardFooter>
             </Card>
