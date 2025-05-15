@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button"
 
 export default function ConstructionMarketplace() {
     return (
-        <div className="flex flex-col">
+        <div className="md:px-16 flex flex-col">
             <section className="relative overflow-hidden py-20 md:py-32">
                 <div className="container relative z-10">
                     <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
@@ -38,12 +38,17 @@ export default function ConstructionMarketplace() {
                                 construction materials delivered to your site.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Button className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 h-12 px-6 text-base">
-                                    Start Shopping
-                                </Button>
-                                <Button variant="outline" className="h-12 px-6 text-base dark:bg-gray-500">
-                                    Become a Seller
-                                </Button>
+                                <Link href="/login" prefetch>
+                                    <Button className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 h-12 px-6 text-base">
+                                        Start Shopping
+                                    </Button>
+                                </Link>
+
+                                <Link href="/login" prefetch>
+                                    <Button variant="outline" className="h-12 px-6 text-base dark:bg-gray-500">
+                                        Become a Seller
+                                    </Button>
+                                </Link>
                             </div>
                             <div className="flex items-center gap-4 text-sm text-gray-500">
                                 <div className="flex -space-x-2">
@@ -137,19 +142,19 @@ export default function ConstructionMarketplace() {
                                 description: "Gain insights into your purchasing patterns and optimize your supply chain.",
                             },
                         ].map((feature, index) => (
-                                <div
-                                    key={index}
-                                    className="group relative rounded-2xl border p-6 hover:border-orange-500 hover:shadow-lg transition-all"
-                                >
-                                    <div className="mb-4">{feature.icon}</div>
-                                    <h3 className="text-xl font-bold dark:text-gray-500">{feature.title}</h3>
-                                    <p className="mt-2 text-gray-600 dark:text-white">{feature.description}</p>
-                                    <div className="mt-4 flex items-center text-sm font-medium text-orange-500">
-                                        <span>Learn more</span>
-                                        <ChevronRight className="ml-1 h-4 w-4" />
-                                    </div>
+                            <div
+                                key={index}
+                                className="group relative rounded-2xl border p-6 hover:border-orange-500 hover:shadow-lg transition-all"
+                            >
+                                <div className="mb-4">{feature.icon}</div>
+                                <h3 className="text-xl font-bold dark:text-gray-500">{feature.title}</h3>
+                                <p className="mt-2 text-gray-600 dark:text-white">{feature.description}</p>
+                                <div className="mt-4 flex items-center text-sm font-medium text-orange-500">
+                                    <span>Learn more</span>
+                                    <ChevronRight className="ml-1 h-4 w-4" />
                                 </div>
-                            ))}
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -195,22 +200,22 @@ export default function ConstructionMarketplace() {
                                     align: "left",
                                 },
                             ].map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className={`relative ${item.align === "left" ? "md:col-start-2" : "md:col-start-1"}`}
-                                    >
-                                        <div className="rounded-xl border p-6 shadow-sm">
-                                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-100 text-orange-600">
-                                                <span className="text-xl font-bold">{item.step}</span>
-                                            </div>
-                                            <h3 className="text-xl font-bold">{item.title}</h3>
-                                            <p className="mt-2 text-gray-600 dark:text-white">{item.description}</p>
+                                <div
+                                    key={index}
+                                    className={`relative ${item.align === "left" ? "md:col-start-2" : "md:col-start-1"}`}
+                                >
+                                    <div className="rounded-xl border p-6 shadow-sm">
+                                        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-100 text-orange-600">
+                                            <span className="text-xl font-bold">{item.step}</span>
                                         </div>
-
-                                        {/* Circle connector */}
-                                        <div className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500 hidden md:block"></div>
+                                        <h3 className="text-xl font-bold">{item.title}</h3>
+                                        <p className="mt-2 text-gray-600 dark:text-white">{item.description}</p>
                                     </div>
-                                ))}
+
+                                    {/* Circle connector */}
+                                    {/* <div className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500 hidden md:block"></div> */}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -233,47 +238,47 @@ export default function ConstructionMarketplace() {
                                 role: "Project Manager, ABC Construction",
                                 image: "https://s3.eu-central-1.amazonaws.com/uploads.mangoweb.org/shared-prod/visegradfund.org/uploads/2021/08/placeholder-male.jpg",
                                 quote:
-                                "EthioBuild has revolutionized how we source materials. We've cut procurement time by 50% and saved thousands on our last project.",
+                                    "EthioBuild has revolutionized how we source materials. We've cut procurement time by 50% and saved thousands on our last project.",
                             },
                             {
                                 name: "Chaltu Ayana",
                                 role: "Supplier, GK Building Materials",
                                 image: "https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351974-stock-illustration-default-placeholder-woman.jpg",
                                 quote:
-                                "As a supplier, I've expanded my customer base. The platform makes it easy to showcase our products and manage orders.",
+                                    "As a supplier, I've expanded my customer base. The platform makes it easy to showcase our products and manage orders.",
                             },
                             {
                                 name: "Abel Tesfa",
                                 role: "Contractor, Awe Builders",
                                 image: "https://static.vecteezy.com/system/resources/previews/036/594/092/non_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg",
                                 quote:
-                                "The quality assurance and verification process gives me confidence that I'm getting exactly what I ordered, every time.",
+                                    "The quality assurance and verification process gives me confidence that I'm getting exactly what I ordered, every time.",
                             },
                         ].map((testimonial, index) => (
-                                <div key={index} className="rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 p-6 shadow-sm">
-                                    <div className="flex items-center gap-4 mb-4">
-                                        <div className="h-12 w-12 overflow-hidden rounded-full">
-                                            <img
-                                                src={testimonial.image || "/placeholder.svg"}
-                                                alt={testimonial.name}
-                                                width={80}
-                                                height={80}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold dark:text-white">{testimonial.name}</h4>
-                                            <p className="text-sm text-gray-600 dark:text-white">{testimonial.role}</p>
-                                        </div>
+                            <div key={index} className="rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 p-6 shadow-sm">
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="h-12 w-12 overflow-hidden rounded-full">
+                                        <img
+                                            src={testimonial.image}
+                                            alt={testimonial.name}
+                                            width={80}
+                                            height={80}
+                                            className="h-full w-full object-cover"
+                                        />
                                     </div>
-                                    <div className="flex mb-4">
-                                        {[1, 2, 3, 4, 5].map((star) => (
-                                            <Star key={star} className="h-5 w-5 fill-amber-400 text-amber-400 dark:text-white" />
-                                        ))}
+                                    <div>
+                                        <h4 className="font-bold text-white">{testimonial.name}</h4>
+                                        <p className="text-sm text-gray-600 text-white">{testimonial.role}</p>
                                     </div>
-                                    <p className="text-gray-700 dark:text-white">"{testimonial.quote}"</p>
                                 </div>
-                            ))}
+                                <div className="flex mb-4">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star key={star} className="h-5 w-5 fill-amber-400 text-amber-400 dark:text-white" />
+                                    ))}
+                                </div>
+                                <p className="text-gray-200 dark:text-white">"{testimonial.quote}"</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -297,11 +302,11 @@ export default function ConstructionMarketplace() {
                                     "Streamlined procurement process",
                                     "Dedicated support team",
                                 ].map((item, index) => (
-                                        <li key={index} className="flex items-start">
-                                            <CheckCircle2 className="mr-2 h-5 w-5 flex-shrink-0" />
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
+                                    <li key={index} className="flex items-start">
+                                        <CheckCircle2 className="mr-2 h-5 w-5 flex-shrink-0" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
                             </ul>
                             <Link href="/login">
                                 <Button className="mt-8 bg-white text-orange-600 hover:bg-white/90">Start Buying</Button>
@@ -322,11 +327,11 @@ export default function ConstructionMarketplace() {
                                     "Marketing and visibility tools",
                                     "Business analytics and insights",
                                 ].map((item, index) => (
-                                        <li key={index} className="flex items-start">
-                                            <CheckCircle2 className="mr-2 h-5 w-5 flex-shrink-0" />
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
+                                    <li key={index} className="flex items-start">
+                                        <CheckCircle2 className="mr-2 h-5 w-5 flex-shrink-0" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
                             </ul>
                             <Link href="/login">
                                 <Button className="mt-8 bg-white text-gray-900 hover:bg-white/90">Start Selling</Button>
