@@ -64,6 +64,7 @@ class ShopController extends Controller
     public function show(Shop $shop)
     {
         $shop = $shop->loadMissing('products');
+        // $shop = $shop->loadMissing('reviews');
         return Inertia::render('shop/profile', [
             'shop' => $shop
         ]);

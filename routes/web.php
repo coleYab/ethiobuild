@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\ReviewController;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('shop', ShopController::class);
     Route::get('shop/{id}/products', [ShopController::class, 'products']);
     Route::get('shop/{id}/orders', [ShopController::class, 'orders']);
+
+    Route::get('review/create', [ ReviewController::class, 'create']);
+    Route::resource('review', ReviewController::class);
 
     Route::get('dashboard', function () {
         // now here comes the last part

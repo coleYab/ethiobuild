@@ -9,11 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { SharedData } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import ProductsList from "../product/productList";
+import Reviews from "@/pages/review/show";
 
 export default function ShopProfilePage({ shop }: { shop: any }) {
   const { auth } = usePage<SharedData>().props
-  const props = usePage<SharedData>().props
-  console.log(props)
+  // const props = usePage<SharedData>().props
+  // console.log(props)
 
   const [isEditing, setIsEditing] = useState(false);
   const { data, setData, patch, processing } = useForm({
@@ -42,7 +43,7 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
       <div className="flex flex-col md:flex-row items-center justify-between my-6 gap-8">
         <h2 className="text-3xl font-bold tracking-tight">Shop Profile</h2>
         <div className="flex items-between gap-2">
-          {auth.user.id == shop.user_id && <>
+          {auth.user.id == shop.user_id ? <>
             <Link href={route("product.create", { shop: shop.id })} prefetch>
               <Button
                 onClick={isEditing ? handleSave : () => setIsEditing(true)}
@@ -69,6 +70,16 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
                 </>
               )}
             </Button>
+          </> : <>
+            <Link
+              href={route('review.create', {
+                shop: shop.id
+              })}
+            >
+              <Button>
+                Write Reviews
+              </Button>
+            </Link>
           </>
           }
 
@@ -79,6 +90,7 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
         <TabsList className="self-center w-full md:w-xl gap-4">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
+          <TabsTrigger value="reviews">Reviews</TabsTrigger>
         </TabsList>
         <TabsContent value="profile">
 
@@ -193,7 +205,10 @@ export default function ShopProfilePage({ shop }: { shop: any }) {
           </div>
         </TabsContent>
         <TabsContent value="products">
-          <ProductsList products={shop.products} />
+          <ProductsList products={shop.products} mine={true} />
+        </TabsContent>
+        <TabsContent value="reviews">
+          <Reviews reviews={shop?.reviews || []} />
         </TabsContent>
       </Tabs>
     </div>

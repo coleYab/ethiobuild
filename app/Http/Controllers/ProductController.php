@@ -118,9 +118,7 @@ class ProductController extends Controller
         });
 
         $product = $product->loadMissing('variations');
-        return Inertia::render('product/create', [
-            'product' => $product
-        ]);
+        return Inertia::location("/shop/$product->shop_id");
     }
 
     /**

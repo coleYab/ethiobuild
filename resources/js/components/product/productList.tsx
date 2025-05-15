@@ -1,8 +1,21 @@
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Trash, Edit } from 'lucide-react';
+import { toast } from 'sonner';
 
-export default function ProductsList({ products } : { products: any[]}) {
+export default function ProductsList({ products, mine = false }: { products: any[], mine: boolean }) {
+  const handleDelete = (id: number) => {
+    router.delete(`/product/${id}`, {
+      onSuccess: () => {
+        toast("product deleted successfully");
+      },
+      onError: () => {
+        toast("unable to delete the product");
+      }
+    })
+  }
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Products</h1>
@@ -25,10 +38,17 @@ export default function ProductsList({ products } : { products: any[]}) {
                   : product.description}
               </CardDescription>
             </CardContent>
-            <CardFooter>
+            <CardFooter className='flex space-between w-full sm:gap-2 md:gap-4'>
               <Link href={`/product/${product.id}`}>
                 <Button variant="default">View Details</Button>
               </Link>
+              {mine && <div className='flex space-between w-full gap-2'>
+                <Link href={`/product/${product.id}/edit`}>
+                  <Button variant="default"><Edit /></Button>
+                </Link>
+                <Button variant="default" onClick={() => handleDelete(product.id)}><Trash /></Button>
+              </div>
+              }
             </CardFooter>
           </Card>
         ))}
